@@ -4,9 +4,9 @@ using UnityEngine;
 using Unity.Entities;
 using System;
 
-namespace GizmosNameSpace 
+namespace Utils.GizmosECS 
 {
-    public class GizmoMono : MonoBehaviour
+    public class GizmoMonobehabiour : MonoBehaviour
     {
         public Action DrawGizmos;
         public Action DrawGizmosSelected;
@@ -22,22 +22,27 @@ namespace GizmosNameSpace
         }
     }
 
-    public static class MyGizmo 
+    public class GizmoECS 
     {
-        private static GizmoMono Handler => _handler != null ? _handler : (_handler = CreateHandler());
-        private static GizmoMono _handler;
+        private static GizmoMonobehabiour Handler => _handler != null ? _handler : (_handler = CreateHandler());
+        private static GizmoMonobehabiour _handler;
 
-        public static void OnDrawGizmos(Action action) 
+        public void OnDrawGizmos(Action action) 
         {
             Handler.DrawGizmos += action;
         }
 
-        private static GizmoMono CreateHandler()
+        public void OnDrawGizmosSelected(Action action) 
+        {
+            Handler.DrawGizmosSelected += action;
+        }
+
+        private static GizmoMonobehabiour CreateHandler()
         {
             var go = new GameObject("Gizmo Handler");
             go.hideFlags = HideFlags.DontSave;
 
-            return go.AddComponent<GizmoMono>();
+            return go.AddComponent<GizmoMonobehabiour>();
         }
     }
 }
