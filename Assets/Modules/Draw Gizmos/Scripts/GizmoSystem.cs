@@ -2,6 +2,8 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+using Utils;
+using Utils.GizmosECS;
 
 namespace GizmosNameSpace 
 {
@@ -13,7 +15,7 @@ namespace GizmosNameSpace
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<Execute>();
-            MyGizmo.OnDrawGizmos(DrawGizmos);
+            UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(DrawGizmos);
         }
 
         public void OnDestroy(ref SystemState state)
@@ -28,7 +30,6 @@ namespace GizmosNameSpace
 
         private void DrawGizmos()
         {
-            Debug.Log("Pinta esfera");
             Gizmos.DrawSphere(Vector3.zero, 0.5f);
         }
 
