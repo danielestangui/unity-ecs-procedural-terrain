@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
@@ -24,13 +25,16 @@ namespace MarchingCube.Test
                 return;
             }
 
-            Debug.Log("First Update");
-
             foreach (var (tranform, voxel) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<Voxel>>())
             {
                 Debug.Log($"{tranform.ValueRO.Position} positon, {voxel.ValueRO.resolution} resolution");
 
-                VerticeBufferElement[] matrix = CreateMatrix(tranform.ValueRO.Position, Mathf.CeilToInt(voxel.ValueRO.resolution));
+                VerticeBufferElement[] matrix = CreateMatrix(
+                        tranform.ValueRO.Position, 
+                        Mathf.CeilToInt(voxel.ValueRO.resolution),
+                        voxel.ValueRO.frequency,
+                        voxel.ValueRO.threshold
+                        );
                 UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(() => DrawMatrix(matrix));
             }
 
@@ -38,7 +42,7 @@ namespace MarchingCube.Test
         }
 
 
-        private VerticeBufferElement[] CreateMatrix(Vector3 position, int resolution) 
+        private VerticeBufferElement[] CreateMatrix(Vector3 position, int resolution, float frequency, float threshold) 
         {
 
             int matrixLenght = resolution * resolution * resolution;
@@ -49,8 +53,7 @@ namespace MarchingCube.Test
             {
                 VerticeBufferElement vertice = new VerticeBufferElement();
                 vertice.position = position + IndexToVector3(i, resolution);
-                vertice.value = 1;
-                Debug.Log($"Values = {vertice.value}");
+                vertice.value = Noise.PerlinNoise3D.get3DPerlinNoise(vertice.position, frequency) > threshold;
                 matrix[i] = vertice;
             }
 
@@ -61,9 +64,21 @@ namespace MarchingCube.Test
         {
             foreach (VerticeBufferElement vertice in matrix) 
             {
-                Gizmos.color = Color.Lerp(Color.white, Color.black, vertice.value);
-                Gizmos.DrawSphere(vertice.position, 0.1f);
+                Gizmos.color = vertice.value ? Color.white : Color.black;
+                Gizmos.DrawSphere(vertice.position, 0.02f);
             }
+        }
+
+        private int[] GetTriangles(VerticeBufferElement[] matrix, int resolution) 
+        {
+            List<int> triangles = new List<int>();
+
+            foreach (VerticeBufferElement vertice in matrix) 
+            {
+                //triangles.AddRange(MarchingCubeLookUpTable.triangulation[VerticeToInt(vertice)]);
+            }
+
+            return triangles.ToArray();
         }
 
         private Vector3 IndexToVector3(int index, int resolution) 
@@ -76,13 +91,18 @@ namespace MarchingCube.Test
 
             Debug.Log($"Vertice{index}: [{x},{y},{z}]");
 
-            return Vector3.right * x + Vector3.up * y + Vector3.forward * z;
+            return (Vector3.right * x + Vector3.up * y + Vector3.forward * z) / resolution ;
+        }
+
+        private int PostionToIndex(int x, int y, int z, int resolution) 
+        {
+            return x + y * resolution + z * resolution * resolution;
         }
 
         public struct VerticeBufferElement
         {
             public Vector3 position;
-            public float value;
+            public bool value;
         }
 
     }

@@ -11,7 +11,7 @@ namespace Utils.GizmosECS
         protected override void OnCreate()
         {
             base.OnCreate();
-            UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(DrawGizmosSphere);
+            //UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(DrawGizmosSphere);
         }
 
         public override void Update()
@@ -20,7 +20,7 @@ namespace Utils.GizmosECS
 
         private void DrawGizmosSphere()
         {
-            Gizmos.DrawSphere(Vector3.zero, 0.5f);
+            //Gizmos.DrawSphere(Vector3.zero, 0.5f);
         }
     }
 }

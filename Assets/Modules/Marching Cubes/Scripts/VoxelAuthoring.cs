@@ -7,6 +7,10 @@ namespace MarchingCube.Test
     public class VoxelAuthoring : MonoBehaviour
     {
         public uint resolution = 8;
+        public float frequency = 8;
+
+        [Range(0, 1)]
+        public float threshold = 0.5f;
 
         public class Baker : Baker<VoxelAuthoring>
         {
@@ -14,7 +18,9 @@ namespace MarchingCube.Test
             {
                 var data = new Voxel
                 {
-                    resolution = authoring.resolution
+                    resolution = authoring.resolution,
+                    frequency = authoring.frequency,
+                    threshold = authoring.threshold
                 };
                 AddComponent(data);
             }
@@ -24,5 +30,7 @@ namespace MarchingCube.Test
     struct Voxel : IComponentData
     {
         public uint resolution;
+        public float frequency;
+        public float threshold;
     }
 }

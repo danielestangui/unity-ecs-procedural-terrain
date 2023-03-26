@@ -15,7 +15,7 @@ namespace GizmosNameSpace
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<Execute>();
-            UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(DrawGizmos);
+            //UtilsServerLocator.Instance.GetService<GizmoECS>().OnDrawGizmos(DrawGizmos);
         }
 
         public void OnDestroy(ref SystemState state)
