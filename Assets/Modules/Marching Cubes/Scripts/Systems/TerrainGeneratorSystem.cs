@@ -39,7 +39,7 @@ namespace TerrainGenerator
             for (int i = 0; i < chunk.vertices.Length; i++)
             {
                 vertices[i].position = transform.Position + IndexToPosition(i, chunk.resolution);
-                vertices[i].value = Noise.PerlinNoise3D.get3DPerlinNoise(vertices[i].position, chunk.frequency) > chunk.threshold;
+                vertices[i].value = MyNoise.PerlinNoise3D.get3DPerlinNoise(vertices[i].position, chunk.frequency) > chunk.threshold;
 
                 Draw.DrawSphere(vertices[i].position, gizmoSphereRadius, vertices[i].value ? Color.white : Color.black);
             }

@@ -53,7 +53,7 @@ namespace MarchingCube.Test
             {
                 VerticeBufferElement vertice = new VerticeBufferElement();
                 vertice.position = position + IndexToVector3(i, resolution);
-                vertice.value = Noise.PerlinNoise3D.get3DPerlinNoise(vertice.position, frequency) > threshold;
+                vertice.value = MyNoise.PerlinNoise3D.get3DPerlinNoise(vertice.position, frequency) > threshold;
                 matrix[i] = vertice;
             }
 

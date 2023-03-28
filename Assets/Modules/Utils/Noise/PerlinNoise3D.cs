@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Noise 
+namespace MyNoise 
 {
     public class PerlinNoise3D
     {
