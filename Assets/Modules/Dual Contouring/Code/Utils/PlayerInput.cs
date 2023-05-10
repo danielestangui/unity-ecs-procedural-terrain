@@ -2,6 +2,9 @@
 
 namespace Code.Utils
 {
+    /// <summary>
+    /// PlayerInput es clase static que actua como si fuera un Monobehavior, controla unicamete el transform de la camara
+    /// </summary>
     public static class PlayerInput
     {
         static Vector3 movementVector;

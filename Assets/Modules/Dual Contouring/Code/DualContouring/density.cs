@@ -45,9 +45,10 @@ public static class glm
         float noise = FractalNoise(4, 0.5343f, 2.2324f, 0.68324f, new Vector2(worldPosition.x, worldPosition.z));
         float terrain = worldPosition.y - (MAX_HEIGHT * noise);
 
-        float cube = Cuboid(worldPosition, new Vector3(-4.0f, 10.0f, -4.0f), new Vector3(12.0f, 12.0f, 12.0f));
-        float sphere = Sphere(worldPosition, new Vector3(15.0f, 2.5f, 1.0f), 16.0f);
+        //float cube = Cuboid(worldPosition, new Vector3(-4.0f, 10.0f, -4.0f), new Vector3(12.0f, 12.0f, 12.0f));
+        //float sphere = Sphere(worldPosition, new Vector3(15.0f, 2.5f, 1.0f), 16.0f);
 
-        return Mathf.Max(-cube, Mathf.Min(sphere, terrain));
+        //return Mathf.Max(-cube, Mathf.Min(sphere, terrain));
+        return terrain;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using Code.Utils;
 using Code;
@@ -13,6 +14,9 @@ public class GameManager : MonoBehaviour
 	OctreeNode root = null;
 
 	// octreeSize must be a power of two!
+    /// <summary>
+    /// Determinala profundidad del octree, del mismo modo que el numero total de octrees nodes que hay
+    /// </summary>
 	const int octreeSize = 64;
 
     void Awake()
@@ -26,7 +30,6 @@ public class GameManager : MonoBehaviour
 		thresholdIndex = (thresholdIndex + 1) % MAX_THRESHOLDS;
         List<MeshVertex> vertices = new List<MeshVertex>();
 		List<int> indices = new List<int>();
-
 
         root = Octree.BuildOctree(new Vector3(-octreeSize / 2, -octreeSize / 2, -octreeSize / 2), octreeSize, THRESHOLDS[thresholdIndex]);
 

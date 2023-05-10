@@ -61,7 +61,8 @@ public class Octree
 
     public static readonly int[][] edgevmap = new int[12][] 
 {
-	new int[2]{2,4},new int[2]{1,5},new int[2]{2,6},new int[2]{3,7},	// x-axis 
+    // El primer valor antes ponia {2,4}, considero que esta mal, porque esta tabal busca enfrentar los vertices en un eje concreto
+	new int[2]{0,4},new int[2]{1,5},new int[2]{2,6},new int[2]{3,7},	// x-axis 
 	new int[2]{0,2},new int[2]{1,3},new int[2]{4,6},new int[2]{5,7},	// y-axis
 	new int[2]{0,1},new int[2]{2,3},new int[2]{4,5},new int[2]{6,7}		// z-axis
 };
@@ -502,6 +503,13 @@ public class Octree
         }
     }
 
+    /// <summary>
+    /// Divide en cuatro segementos (steps) la linea que hay entre los puntos de corte, donde obtenga el minimo valor será el punto más 
+    /// cercano de interseccion
+    /// </summary>
+    /// <param name="p0"></param>
+    /// <param name="p1"></param>
+    /// <returns> Devuelve un valora aproximado de donde se encuentra la interseccion </returns>
     public static Vector3 ApproximateZeroCrossingPosition(Vector3 p0, Vector3 p1)
     {
         // approximate the zero crossing by finding the min value along the edge
@@ -513,6 +521,8 @@ public class Octree
         while (currentT <= 1.0f)
         {
             Vector3 p = p0 + ((p1 - p0) * currentT);
+
+            // Utiliza el valor absoluto de tal forma que el valor mas cercano a 0 es aquel que separa los dos tipos de materiales
             float density = Mathf.Abs(glm.Density_Func(p));
             if (density < minValue)
             {
@@ -549,15 +559,21 @@ public class Octree
             Vector3 cornerPos = leaf.min + CHILD_MIN_OFFSETS[i];
             float density = glm.Density_Func(cornerPos);
             int material = density < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR;
+
+            // Esta es una operación de bit, en la cual se asigna un valor de 1 en la posicion i 
             corners |= (material << i);
         }
 
+        // Son un total de 8 bits por lo que:
+        // 00000000 = 0 significa que esta fuera del volumen completamente
+        // 11111111 = 255 signidica que esta dentro del volumen completamente
         if (corners == 0 || corners == 255)
         {
             // voxel is full inside or outside the volume
-            //delete leaf
-            //setting as null isn't required by the GC in C#... but its in the original, so why not!
+            //Eliminamos la hoja
             leaf = null;
+
+            //setting as null isn't required by the GC in C#... but its in the original, so why not!
             return null;
         }
 
@@ -572,12 +588,15 @@ public class Octree
             int c1 = edgevmap[i][0];
             int c2 = edgevmap[i][1];
 
+            // Extrae el valor de coners en la posción c1 y lo asigna a m1
             int m1 = (corners >> c1) & 1;
             int m2 = (corners >> c2) & 1;
 
+            // Si en ambos puntos (corners) se da la circustancia de tener el mismo material queire decir que no hay puntos de corte
             if ((m1 == MATERIAL_AIR && m2 == MATERIAL_AIR) || (m1 == MATERIAL_SOLID && m2 == MATERIAL_SOLID))
             {
                 // no zero crossing on this edge
+                // salta el ciclo del bucle
                 continue;
             }
 
@@ -602,6 +621,8 @@ public class Octree
         drawInfo.qef = qef.getData();
 
         Vector3 min = leaf.min;
+
+        // Evalua si el punto se sale del tamaño del leaf (auque draw.position = Vector3.zero)
         Vector3 max = new Vector3(leaf.min.x + leaf.size, leaf.min.y + leaf.size, leaf.min.z + leaf.size);
         if (drawInfo.position.x < min.x || drawInfo.position.x > max.x ||
             drawInfo.position.y < min.y || drawInfo.position.y > max.y ||
