@@ -57,14 +57,14 @@ namespace TerrainGenerator
             Vertex[] corner = chunk.vertices.ToArray();
             int resolution = chunk.resolution;
 
-            float gizmoSphereRadius = chunk.size / resolution * 0.1f;
+            float gizmoSphereRadius = chunk.size / resolution * 0.05f;
 
             for (int i = 0; i < chunk.vertices.Length; i++)
             {
-                Draw.DrawSphere(corner[i].position, gizmoSphereRadius, corner[i].value > chunk.threshold ? Color.white : Color.black);
+                Draw.DrawSphere(corner[i].position, gizmoSphereRadius, corner[i].value > 0 ? Color.white : Color.black);
 
                 float3 textOffset = new float3(1, 1, 0) * gizmoSphereRadius;
-                Draw.DrawText(corner[i].position + textOffset, i.ToString());
+                //Draw.DrawText(corner[i].position + textOffset, i.ToString());
             }
         }
 

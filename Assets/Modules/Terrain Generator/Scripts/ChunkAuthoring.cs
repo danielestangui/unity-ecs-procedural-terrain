@@ -11,7 +11,7 @@ namespace TerrainGenerator
     [AddComponentMenu("Terrain Generator/Chunk Authoring")]
     public class ChunkAuthoring : MonoBehaviour
     {
-        [SerializeField, Range(2, 5)]
+        [SerializeField, Range(2, 10)]
         private int resolution;
 
         [SerializeField, Range(1, 10)]
@@ -38,8 +38,8 @@ namespace TerrainGenerator
                     size = authoring.size,
                     vertices = new NativeArray<Vertex>(vertexResolution, Allocator.Persistent),
                     cells = new NativeArray<Cell>(cellResolution, Allocator.Persistent),
-                    frequency = authoring.threshold,
-                    threshold = authoring.frequency
+                    //frequency = authoring.threshold,
+                    //threshold = authoring.frequency
                 };
                 AddComponent(data);
             }
@@ -53,8 +53,8 @@ namespace TerrainGenerator
         public NativeArray<Vertex> vertices;
         public NativeArray<Cell> cells;
 
-        public float frequency;
-        public float threshold;
+        //public float frequency;
+        //public float threshold;
     }
 
     public struct Vertex
@@ -87,6 +87,8 @@ namespace TerrainGenerator
         public int corner5;
         public int corner6;
         public int corner7;
-    }
 
+        public bool isCrossPoint;
+        public float3 crossPoint;
+    }
 }

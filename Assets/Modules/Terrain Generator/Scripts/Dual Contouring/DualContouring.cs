@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using TerrainGenerator.Utils;
+using System;
 
 namespace TerrainGenerator 
 {
@@ -9,9 +12,44 @@ namespace TerrainGenerator
         public static int MATERIAL_AIR = 0;
         public static int MATERIAL_SOLID = 1;
 
-        public static void CalculatePoint(Vertex[]vertices, Cell cell)
+        public static float QEF_ERROR = 1e-6f;
+        public static int QEF_SWEEPS = 4;
+
+        public static readonly int[][] edgevmap = new int[12][]
+        {
+	        new int[2]{0,4},new int[2]{1,5},new int[2]{2,6},new int[2]{3,7},	// x-axis 
+	        new int[2]{0,2},new int[2]{1,3},new int[2]{4,6},new int[2]{5,7},	// y-axis
+	        new int[2]{0,1},new int[2]{2,3},new int[2]{4,5},new int[2]{6,7}		// z-axis
+        };
+
+        public static readonly Vector3[] CHILD_MIN_OFFSETS =
+        {   
+	    // needs to match the vertMap from Dual Contouring impl
+	    new Vector3( 0, 0, 0 ),
+        new Vector3( 0, 0, 1 ),
+        new Vector3( 0, 1, 0 ),
+        new Vector3( 0, 1, 1 ),
+        new Vector3( 1, 0, 0 ),
+        new Vector3( 1, 0, 1 ),
+        new Vector3( 1, 1, 0 ),
+        new Vector3( 1, 1, 1 ),
+        };
+
+        public static Vector3 CalculatePoint(int index, Vertex[] vertices, Cell cell)
         {
             int corners = 0;
+
+            int[] cornersArray = 
+                {
+                    cell.corner0,
+                    cell.corner1,
+                    cell.corner2,
+                    cell.corner3,
+                    cell.corner4,
+                    cell.corner5,
+                    cell.corner6,
+                    cell.corner7
+                };
 
             corners |= (vertices[cell.corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
             corners |= (vertices[cell.corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
@@ -24,8 +62,101 @@ namespace TerrainGenerator
 
             if (corners == 0 || corners == 255)
             {
-                Debug.Log("No hay colisiones en esta Cell");
+                return Vector3.zero;
             }
+
+            //Debug.Log($"Conners binary: {Convert.ToString(corners, 2)}");
+
+
+            const int MAX_CROSSINGS = 6;
+            int edgeCount = 0;
+            float3 averageNormal = Vector3.zero;
+            QefSolver qef = new QefSolver();
+
+            for (int i = 0; i < 12 && edgeCount < MAX_CROSSINGS; i++)
+            {
+                int c1 = edgevmap[i][0];
+                int c2 = edgevmap[i][1];
+
+                // Extrae el valor de coners en la posción c1 y lo asigna a m1
+                int m1 = (corners >> c1) & 1;
+                int m2 = (corners >> c2) & 1;
+
+                // Si en ambos puntos (corners) se da la circustancia de tener el mismo material queire decir que no hay puntos de corte
+                if ((m1 == MATERIAL_AIR && m2 == MATERIAL_AIR) || (m1 == MATERIAL_SOLID && m2 == MATERIAL_SOLID))
+                {
+                    // salta el ciclo del bucle
+                    //Debug.Log($"Para {edgevmap[i][0]} y {edgevmap[i][1]} salta el bucle.");
+                    continue;
+                }
+
+                float3 p1 = vertices[cornersArray[c1]].position;
+                float3 p2 = vertices[cornersArray[c2]].position;
+
+                float3 p = ApproximateZeroCrossingPosition(p1, p2);
+
+                //Debug.Log($"Para {edgevmap[i][0]} y {edgevmap[i][1]} pinta.");
+
+                //Draw.DrawSphere(p, 0.1f, Color.red);
+
+                float3 n = CalculateSurfaceNormal(p);
+                qef.add(p.x, p.y, p.z, n.x, n.y, n.z);
+
+                averageNormal += n;
+
+                edgeCount++;
+            }
+
+            Vector3 qefPosition = Vector3.zero;
+            qef.solve(ref qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
+
+            float3 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z);
+
+            return position;
+
+        }
+
+        /// <summary>
+        /// Divide en cuatro segementos (steps) la linea que hay entre los puntos de corte, donde obtenga el minimo valor será el punto más 
+        /// cercano de interseccion
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <returns> Devuelve un valora aproximado de donde se encuentra la interseccion </returns>
+        public static float3 ApproximateZeroCrossingPosition(float3 p0, float3 p1)
+        {
+            // approximate the zero crossing by finding the min value along the edge
+            float minValue = 100000f;
+            float t = 0f;
+            float currentT = 0f;
+            const int steps = 8;
+            const float increment = 1f / (float)steps;
+            while (currentT <= 1.0f)
+            {
+                float3 p = p0 + ((p1 - p0) * currentT);
+
+                // Utiliza el valor absoluto de tal forma que el valor mas cercano a 0 es aquel que separa los dos tipos de materiales
+                float density = Mathf.Abs(MyNoise.PerlinNoise3D.DensityFunction(p));
+                if (density < minValue)
+                {
+                    minValue = density;
+                    t = currentT;
+                }
+
+                currentT += increment;
+            }
+
+            return p0 + ((p1 - p0) * t);
+        }
+
+        public static float3 CalculateSurfaceNormal(Vector3 p)
+        {
+            float H = 0.001f;
+            float dx = MyNoise.PerlinNoise3D.DensityFunction(p + new Vector3(H, 0.0f, 0.0f)) - MyNoise.PerlinNoise3D.DensityFunction(p - new Vector3(H, 0.0f, 0.0f));
+            float dy = MyNoise.PerlinNoise3D.DensityFunction(p + new Vector3(0.0f, H, 0.0f)) - MyNoise.PerlinNoise3D.DensityFunction(p - new Vector3(0.0f, H, 0.0f));
+            float dz = MyNoise.PerlinNoise3D.DensityFunction(p + new Vector3(0.0f, 0.0f, H)) - MyNoise.PerlinNoise3D.DensityFunction(p - new Vector3(0.0f, 0.0f, H));
+
+            return  (float3) new Vector3(dx, dy, dz).normalized;
         }
     }
 }

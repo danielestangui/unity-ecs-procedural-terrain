@@ -62,6 +62,8 @@ namespace MyNoise
 
         private const int directionCount = 15;
 
+        private const float frequency = 0.16f;
+
         private static float scalar(Vector3 a, Vector3 b)
         {
             return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -71,6 +73,12 @@ namespace MyNoise
         {
             return d * d * d * (d * (d * 6f - 15f) + 10f);
         }
+
+        public static float DensityFunction(Vector3 point) 
+        {
+            return get3DPerlinNoise(point, frequency);
+        }
+
         public static float get3DPerlinNoise(Vector3 point, float frequency)
         {
             point *= frequency;

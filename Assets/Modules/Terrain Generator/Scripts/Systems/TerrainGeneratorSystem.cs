@@ -53,7 +53,7 @@ namespace TerrainGenerator
             {
                 //Corner info
                 corner[i].position = transform.Position + ((float3)MeshMaths.IndexToPosition(i, resolution)/(resolution - 1)) * chunk.size + centerOfset;
-                corner[i].value = MyNoise.PerlinNoise3D.get3DPerlinNoise(corner[i].position, chunk.frequency);
+                corner[i].value = MyNoise.PerlinNoise3D.DensityFunction(corner[i].position);
             }
 
             // Celdas
@@ -78,15 +78,13 @@ namespace TerrainGenerator
                         cells[cellIndex].corner6 = verticeIndex + resolution + resolution2;
                         cells[cellIndex].corner7 = verticeIndex + 1 + resolution + resolution2;
 
-                        Debug.Log($"Cell {cellIndex}: " +
+/*                        Debug.Log($"Cell {cellIndex}: " +
                             $"[{cells[cellIndex].corner0}, {cells[cellIndex].corner1}, " +
                             $"{cells[cellIndex].corner2}, {cells[cellIndex].corner3}, " +
                             $"{cells[cellIndex].corner4}, {cells[cellIndex].corner5}, " +
-                            $"{cells[cellIndex].corner6}, {cells[cellIndex].corner7}]");
+                            $"{cells[cellIndex].corner6}, {cells[cellIndex].corner7}]");*/
 
                         cellIndex++;
-
-                        //DualContouring.CalculatePoint(corner, cells[cellIndex]);
                     }
                 }
             }

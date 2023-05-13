@@ -124,7 +124,7 @@ public class QefSolver
         data.clear();
     }
 
-    public float solve(Vector3 outx, float svd_tol, int svd_sweeps, float pinv_tol)
+    public float solve(ref Vector3 outx, float svd_tol, int svd_sweeps, float pinv_tol)
     {
         if (data.numPoints == 0)
         {
