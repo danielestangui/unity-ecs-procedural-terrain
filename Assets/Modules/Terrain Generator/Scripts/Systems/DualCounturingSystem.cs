@@ -26,7 +26,7 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<ChunkComponent>>())
+            foreach (var (buffer, chunk) in SystemAPI.Query<DynamicBuffer<VerticesBuffer>, RefRW<ChunkComponent>>())
             {
                 Cell[] cells = chunk.ValueRO.cells.ToArray();
                 Vertex[] corner = chunk.ValueRO.vertices.ToArray();
@@ -40,6 +40,9 @@ namespace TerrainGenerator
                     if (position != Vector3.zero) 
                     {
                         cells[i].crossPoint = position;
+
+                        VerticesBuffer element = new VerticesBuffer { Value = position };
+                        buffer.Add(element);
                     }
                 }
 

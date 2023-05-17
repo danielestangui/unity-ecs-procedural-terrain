@@ -42,6 +42,8 @@ namespace TerrainGenerator
                     //threshold = authoring.frequency
                 };
                 AddComponent(data);
+
+                AddBuffer<VerticesBuffer>();
             }
         }
     }
@@ -91,4 +93,10 @@ namespace TerrainGenerator
         public bool isCrossPoint;
         public float3 crossPoint;
     }
+
+    public struct VerticesBuffer : IBufferElementData 
+    {
+        public float3 Value;
+    }
+
 }
