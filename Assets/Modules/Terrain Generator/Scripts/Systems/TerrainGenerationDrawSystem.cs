@@ -61,7 +61,7 @@ namespace TerrainGenerator
 
             for (int i = 0; i < chunk.vertices.Length; i++)
             {
-                Draw.DrawSphere(corner[i].position, gizmoSphereRadius, corner[i].value > 0 ? Color.white : Color.black);
+                Draw.DrawSphere(corner[i].position, gizmoSphereRadius, corner[i].value < 0 ? Color.white : Color.black);
 
                 float3 textOffset = new float3(1, 1, 0) * gizmoSphereRadius;
                 //Draw.DrawText(corner[i].position + textOffset, i.ToString());

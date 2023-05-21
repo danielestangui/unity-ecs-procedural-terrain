@@ -83,6 +83,12 @@ namespace TerrainGenerator.Utils
             }
         }
 
+        public static void DrawLine(Vector3 from, Vector3 to, Color color) 
+        {
+            onDrawGizmoActions.Add(new Action(() => Gizmos.color = color));
+            onDrawGizmoActions.Add(new Action(() => Gizmos.DrawLine(from, to)));
+        }
+
         public static void DrawSphere(float3 position, float radius, Color color) 
         {
             onDrawGizmoActions.Add(new Action(() => Gizmos.color = color));

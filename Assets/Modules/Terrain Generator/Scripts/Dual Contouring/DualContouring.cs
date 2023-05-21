@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using TerrainGenerator.Utils;
 using System;
+using Unity.Collections;
 
 namespace TerrainGenerator 
 {
@@ -35,7 +36,7 @@ namespace TerrainGenerator
         new Vector3( 1, 1, 1 ),
         };
 
-        public static Vector3 CalculatePoint(int index, Vertex[] vertices, Cell cell)
+        public static VerticeElement CalculatePoint(int index, Vertex[] vertices, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges, Cell cell)
         {
             int corners = 0;
 
@@ -62,7 +63,11 @@ namespace TerrainGenerator
 
             if (corners == 0 || corners == 255)
             {
-                return Vector3.zero;
+                return new VerticeElement 
+                {
+                    position = Vector3.zero,
+                    normal = Vector3.zero
+                };
             }
 
             //Debug.Log($"Conners binary: {Convert.ToString(corners, 2)}");
@@ -104,6 +109,19 @@ namespace TerrainGenerator
 
                 averageNormal += n;
 
+                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c1],cells);
+
+                IntersectingEdgesElement edge = new IntersectingEdgesElement
+                {
+                    vertexIndex0 = cornersArray[c1],
+                    vertexIndex1 = cornersArray[c2],
+                    sharedCells00 = surrondingCells[0],
+                    sharedCells01 = surrondingCells[1],
+                    sharedCells10 = surrondingCells[2],
+                    sharedCells11 = surrondingCells[3]
+                };
+
+                edges.Add(edge);
                 edgeCount++;
             }
 
@@ -112,8 +130,13 @@ namespace TerrainGenerator
 
             float3 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z);
 
-            return position;
+            VerticeElement vertice = new VerticeElement
+            {
+                position = new float3(qefPosition.x, qefPosition.y, qefPosition.z),
+                normal = averageNormal / edgeCount
+            };
 
+            return vertice;
         }
 
         /// <summary>
@@ -157,6 +180,45 @@ namespace TerrainGenerator
             float dz = MyNoise.PerlinNoise3D.DensityFunction(p + new Vector3(0.0f, 0.0f, H)) - MyNoise.PerlinNoise3D.DensityFunction(p - new Vector3(0.0f, 0.0f, H));
 
             return  (float3) new Vector3(dx, dy, dz).normalized;
+        }
+
+        private static Cell[] GetSurrondingCells(int index0, int index1 ,Cell[] cells) 
+        {
+            Cell[] surrondigCells = new Cell[8];
+
+            int cellIndex = 0;
+
+            foreach (Cell cell in cells) 
+            {
+                if (CellContainsVecrtiece(index0, cell) && CellContainsVecrtiece(index1, cell)) 
+                {
+                    if (cellIndex > surrondigCells.Length) 
+                    {
+                        Debug.Log("Error ");
+                        continue;
+                    }
+                    surrondigCells[cellIndex] = cell;
+                    cellIndex++;
+                }
+            }
+
+            return surrondigCells;
+        }
+
+        private static bool CellContainsVecrtiece(int vertice,  Cell  cell) 
+        {
+            bool control = false;
+
+            control |= cell.corner0 == vertice;
+            control |= cell.corner1 == vertice;
+            control |= cell.corner2 == vertice;
+            control |= cell.corner3 == vertice;
+            control |= cell.corner4 == vertice;
+            control |= cell.corner5 == vertice;
+            control |= cell.corner6 == vertice;
+            control |= cell.corner7 == vertice;
+
+            return control;
         }
     }
 }

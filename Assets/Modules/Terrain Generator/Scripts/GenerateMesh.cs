@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -31,19 +32,45 @@ namespace TerrainGenerator
 
             for (int i = 0; i < entityNativeArray.Length; i++)
             {
+
+                // Vetrtices Fake
                 Vertex[] vertices =
                     World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<ChunkComponent>(entityNativeArray[i]).vertices.ToArray(); 
                 Debug.Log($"Chunk {i}: Tiene {vertices.Length} vertices.");
 
-                if (entityManager.HasComponent<VerticesBuffer>(entityNativeArray[i])) 
+                // Vertices Reales
+                DynamicBuffer<VerticesBuffer> buffer = entityManager.GetBuffer<VerticesBuffer>(entityNativeArray[i]);
+                Debug.Log($"Buffer {i}: Tiene {buffer.Length} vertices.");
+
+                List<Vector3> vertice3 = new List<Vector3>();
+
+                foreach (VerticesBuffer item in buffer)
                 {
-                    DynamicBuffer<VerticesBuffer> buffer = entityManager.GetBuffer<VerticesBuffer>(entityNativeArray[i]);
-
-                    Debug.Log($"Buffer {i}: Tiene {buffer.Length} vertices.");
-
-                    buffer.Clear();
+                    vertice3.Add(item.vertice.position);
                 }
+
+                buffer.Clear();
+
+                // Triangles
+                DynamicBuffer<TrianglesBuffer> trianglesbuffer = entityManager.GetBuffer<TrianglesBuffer>(entityNativeArray[i]);
+                List<int> trianglesInt = new List<int>();
+
+                foreach (TrianglesBuffer item in trianglesbuffer)
+                {
+                    trianglesInt.Add(item.Value);
+                }
+                trianglesbuffer.Clear();
+
+                // Mesh
+                Mesh mesh = new Mesh();
+                mesh.vertices = vertice3.ToArray();
+                mesh.triangles = trianglesInt.ToArray();
+
+                meshFilter.sharedMesh = mesh;
+
+                Debug.Log("Mesh Triangles = " + trianglesbuffer.Length);
             }
+
             entityNativeArray.Dispose();
         }
     }

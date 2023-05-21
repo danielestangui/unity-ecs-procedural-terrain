@@ -44,6 +44,8 @@ namespace TerrainGenerator
                 AddComponent(data);
 
                 AddBuffer<VerticesBuffer>();
+                AddBuffer<IntersectingEdgesBuffer>();
+                AddBuffer<TrianglesBuffer>();
             }
         }
     }
@@ -90,13 +92,49 @@ namespace TerrainGenerator
         public int corner6;
         public int corner7;
 
+        public int crossPointIndex;
         public bool isCrossPoint;
-        public float3 crossPoint;
     }
 
+    /// <summary>
+    /// VerticesBuffer stores all the vertices that form the mesh
+    /// </summary>
     public struct VerticesBuffer : IBufferElementData 
     {
-        public float3 Value;
+        public VerticeElement vertice;
     }
 
+    public struct VerticeElement 
+    {
+        public float3 position;
+        public float3 normal;
+    }
+
+    /// <summary>
+    /// TrianglesBuffer stores all the triangles that form the mesh
+    /// </summary>
+    public struct TrianglesBuffer : IBufferElementData 
+    {
+        public int Value;
+    }
+
+    /// <summary>
+    /// IntersectingEdgesBuffer stores all intersecting edges. This buffer is used in poligonization fase.
+    /// </summary>
+    public struct IntersectingEdgesBuffer : IBufferElementData 
+    {
+        public IntersectingEdgesElement edgeData;
+    }
+
+    public struct IntersectingEdgesElement
+    {
+        public int vertexIndex0;
+        public int vertexIndex1;
+
+        // Shared cells between both vertex
+        public Cell sharedCells00;
+        public Cell sharedCells01;
+        public Cell sharedCells10;
+        public Cell sharedCells11;
+    }
 }
