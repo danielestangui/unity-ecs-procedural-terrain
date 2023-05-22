@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace TerrainGenerator.Utils
 {
@@ -32,5 +33,29 @@ namespace TerrainGenerator.Utils
             return new int3(x, y, z);
         }
 
+        public static float3 GetCenterOfCube(float3[] corners) 
+        {
+            float3 center = Vector3.zero;
+
+            if (corners.Length == 8)
+            {
+                foreach (float3 corner in corners) 
+                {
+                    center.x += corner.x;
+                    center.y += corner.y;
+                    center.z += corner.z;
+                }
+
+                center.x /= corners.Length;
+                center.y /= corners.Length;
+                center.z /= corners.Length;
+            }
+            else 
+            {
+                Debug.LogError("Conner number of elements is invalid");
+            }
+
+            return center;
+        }
     }
 }

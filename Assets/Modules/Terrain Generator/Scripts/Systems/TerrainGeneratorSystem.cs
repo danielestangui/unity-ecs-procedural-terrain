@@ -53,6 +53,7 @@ namespace TerrainGenerator
             for (int i = 0; i < gridVertexArray.Length; i++)
             {
                 //Corner info
+                gridVertexArray[i].index = i;
                 gridVertexArray[i].position = position + ((float3)MeshMaths.IndexToPosition(i, resolution) / (resolution - 1)) * size + centerOfset;
                 gridVertexArray[i].value = MyNoise.PerlinNoise3D.DensityFunction(gridVertexArray[i].position);
             }
@@ -83,6 +84,7 @@ namespace TerrainGenerator
                     {
                         int verticeIndex = MeshMaths.PositionToIndex(new int3(x, y, z), resolution);
 
+                        cellArray[cellIndex].index = cellIndex;
                         cellArray[cellIndex].corner0 = verticeIndex;
                         cellArray[cellIndex].corner1 = verticeIndex + 1;
                         cellArray[cellIndex].corner2 = verticeIndex + resolution;

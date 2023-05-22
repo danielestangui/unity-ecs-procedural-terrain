@@ -6,10 +6,14 @@ using TerrainGenerator.Utils;
 using System;
 using Unity.Collections;
 
-namespace TerrainGenerator 
+namespace TerrainGenerator
 {
     public static class DualContouring
     {
+        public static int AXIS_X = 0;
+        public static int AXIS_Y = 1;
+        public static int AXIS_Z = 2;
+
         public static int MATERIAL_AIR = 0;
         public static int MATERIAL_SOLID = 1;
 
@@ -109,12 +113,13 @@ namespace TerrainGenerator
 
                 averageNormal += n;
 
-                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c1],cells);
+                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c2],cells);
 
                 IntersectingEdgesElement edge = new IntersectingEdgesElement
                 {
                     vertexIndex0 = cornersArray[c1],
                     vertexIndex1 = cornersArray[c2],
+                    axis = GetAxis(c1, c2),
                     sharedCells00 = surrondingCells[0],
                     sharedCells01 = surrondingCells[1],
                     sharedCells10 = surrondingCells[2],
@@ -133,7 +138,8 @@ namespace TerrainGenerator
             VerticeElement vertice = new VerticeElement
             {
                 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z),
-                normal = averageNormal / edgeCount
+                normal = averageNormal / edgeCount,
+                cell = cells[index]
             };
 
             return vertice;
@@ -219,6 +225,13 @@ namespace TerrainGenerator
             control |= cell.corner7 == vertice;
 
             return control;
+        }
+
+        private static int GetAxis(int c1, int c2) 
+        {
+            Debug.Log($"Puntos a evaluar; {c1}, {c2}");
+
+            return AXIS_X;
         }
     }
 }

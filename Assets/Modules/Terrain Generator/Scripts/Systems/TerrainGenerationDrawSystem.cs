@@ -1,6 +1,6 @@
-#define DEBUG_TerrainGenerator__GridVertex
+//#define DEBUG_TerrainGenerator__DrawChunkBounds
+//#define DEBUG_TerrainGenerator__GridVertex
 //#define DEBUG_TerrainGenerator__GridVertexIndex
-#define DEBUG_TerrainGenerator__DrawChunkBounds
 
 using Unity.Burst;
 using Unity.Entities;
@@ -42,7 +42,6 @@ namespace TerrainGenerator
                 float gizmoSphereRadius = chunk.Size / chunk.Resolution * gizmoSphereRadiusFactor;
                 DrawCorners(chunk.GridVertexArray, gizmoSphereRadius);
 #endif
-
             };
         }
 
@@ -73,6 +72,5 @@ namespace TerrainGenerator
 # endif
             }
         }
-
     }
 }

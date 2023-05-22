@@ -31,25 +31,15 @@ namespace TerrainGenerator
             {
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
 
-                // Llena el buffer de vertices
-                for (int i = 0; i < chunk.CellArray.Length; i++)
+                FillVerticeBuffer(chunk, ref edges);
+
+                string msg = "";
+                for (int j = 0; j < chunk.verticesBuffer.Length; j++)
                 {
-                    VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
-
-                    if (!vertice.position.Equals(float3.zero)) 
-                    {
-
-                        VerticesBuffer element = new VerticesBuffer 
-                        { 
-                            vertice = vertice 
-                        };
-
-                        chunk.CellArray[i].crossPointIndex = chunk.verticesBuffer.Length;
-                        chunk.verticesBuffer.Add(element);
-                    }
+                   msg += chunk.verticesBuffer[j].vertice.cell.index + ", ";
                 }
 
-                Debug.Log($"Vertrices: {chunk.verticesBuffer.Length}");
+                Debug.Log($"Vertrices: ({chunk.verticesBuffer.Length}) {msg}");
 
                 // Copia la lista para pasarla al bufer
                 foreach (IntersectingEdgesElement element  in edges) 
@@ -79,17 +69,35 @@ namespace TerrainGenerator
             };
         }
 
+        private void FillVerticeBuffer(ChunkAspect chunk,ref List<IntersectingEdgesElement> edges) 
+        {
+            for (int i = 0; i < chunk.CellArray.Length; i++)
+            {
+                VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
+
+                if (!vertice.position.Equals(float3.zero))
+                {
+                    VerticesBuffer element = new VerticesBuffer
+                    {
+                        vertice = vertice
+                    };
+                    
+                    chunk.verticesBuffer.Add(element);
+                }
+            }
+        }
+
         private int[] GenerateTriangles(IntersectingEdgesBuffer edge, DynamicBuffer<VerticesBuffer> vertices) 
         {
             List<int> triangles = new List<int>();
 
-            triangles.Add(edge.edgeData.sharedCells00.crossPointIndex);
+            /*triangles.Add(edge.edgeData.sharedCells00.crossPointIndex);
             triangles.Add(edge.edgeData.sharedCells10.crossPointIndex);
             triangles.Add(edge.edgeData.sharedCells11.crossPointIndex);
 
             triangles.Add(edge.edgeData.sharedCells00.crossPointIndex);
             triangles.Add(edge.edgeData.sharedCells11.crossPointIndex);
-            triangles.Add(edge.edgeData.sharedCells01.crossPointIndex);
+            triangles.Add(edge.edgeData.sharedCells01.crossPointIndex);*/
 
             return triangles.ToArray();
         }

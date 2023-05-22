@@ -5,7 +5,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-
 namespace TerrainGenerator 
 {
     [AddComponentMenu("Terrain Generator/Chunk Authoring")]
@@ -63,6 +62,7 @@ namespace TerrainGenerator
 
     public struct GridVertex
     {
+        public int index;
         public float3 position;
         public float value;
     }
@@ -83,6 +83,8 @@ namespace TerrainGenerator
             0---------1
 
         */
+
+        public int index;
         public int corner0;
         public int corner1;
         public int corner2;
@@ -91,8 +93,6 @@ namespace TerrainGenerator
         public int corner5;
         public int corner6;
         public int corner7;
-
-        public int crossPointIndex;
     }
 
     /// <summary>
@@ -107,6 +107,7 @@ namespace TerrainGenerator
     {
         public float3 position;
         public float3 normal;
+        public Cell cell;
     }
 
     /// <summary>
@@ -129,6 +130,8 @@ namespace TerrainGenerator
     {
         public int vertexIndex0;
         public int vertexIndex1;
+
+        public int axis;
 
         // Shared cells between both vertex
         public Cell sharedCells00;
