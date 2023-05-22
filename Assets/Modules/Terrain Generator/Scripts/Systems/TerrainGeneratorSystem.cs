@@ -29,6 +29,9 @@ namespace TerrainGenerator
         {
             foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
             {
+                chunk.verticesBuffer.Clear();
+                chunk.triangleBuffer.Clear();
+
                 chunk.GridVertexArray = GenerateGridVertexData(chunk.Position, chunk.Resolution, chunk.Size);
                 chunk.CellArray = GenerateCellData(chunk.Resolution);
             };

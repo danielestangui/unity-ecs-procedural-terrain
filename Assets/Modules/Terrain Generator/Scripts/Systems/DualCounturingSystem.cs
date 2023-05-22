@@ -47,7 +47,6 @@ namespace TerrainGenerator
                         chunk.CellArray[i].crossPointIndex = chunk.verticesBuffer.Length;
                         chunk.verticesBuffer.Add(element);
                     }
-
                 }
 
                 Debug.Log($"Vertrices: {chunk.verticesBuffer.Length}");
@@ -74,7 +73,7 @@ namespace TerrainGenerator
                     }
                 }
 
-                Debug.Log($"Triangles: {chunk.triangleBuffer.Length}");
+                Debug.Log($"Triangles: {chunk.triangleBuffer[23].Value}");
 
                 chunk.edgesBuffer.Clear();
             };

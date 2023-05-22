@@ -8,7 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace TerrainGenerator 
+namespace TerrainGenerator
 {
     public class GenerateMesh : MonoBehaviour
     {
@@ -25,44 +25,42 @@ namespace TerrainGenerator
 
         private void LateUpdate()
         {
-            EntityQuery chunkEntityQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(ChunkAspect));
+            EntityQuery chunkEntityQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(ChunkComponent));
             NativeArray<Entity> entityNativeArray = chunkEntityQuery.ToEntityArray(Allocator.Temp);
 
             Debug.Log($"Numero de chunks: {entityNativeArray.Length}");
 
-            for (int entityIndex = 0; entityIndex < entityNativeArray.Length; entityIndex++)
+            for (int i = 0; i < entityNativeArray.Length; i++)
             {
-                ChunkAspect chunk = entityManager.GetAspect<ChunkAspect>(entityNativeArray[entityIndex]);
-
                 // Vertices
-                Debug.Log($"Buffer {entityIndex}: Tiene {chunk.verticesBuffer} vertices.");
+                DynamicBuffer<VerticesBuffer> verticeBuffer = entityManager.GetBuffer<VerticesBuffer>(entityNativeArray[i]);
+                Debug.Log($"Buffer {i}: Tiene {verticeBuffer.Length} vertices.");
 
-                List<Vector3> vertice3 = new List<Vector3>();
+                Vector3[] vertices = new Vector3[verticeBuffer.Length];
 
-                foreach (VerticesBuffer item in chunk.verticesBuffer)
+                for (int verticeIndex = 0; verticeIndex < vertices.Length; verticeIndex++)
                 {
-                    vertice3.Add(item.vertice.position);
+                    vertices[verticeIndex] = verticeBuffer[verticeIndex].vertice.position;
                 }
-
-                chunk.verticesBuffer.Clear();
 
                 // Triangles
-                int[] triangles = new int[chunk.triangleBuffer.Length];
+                DynamicBuffer<TrianglesBuffer> triangleBuffer = entityManager.GetBuffer<TrianglesBuffer>(entityNativeArray[i]);
+                int[] triangles = new int[triangleBuffer.Length];
 
-                for (int triangleIndex = 0; triangleIndex < chunk.triangleBuffer.Length; triangleIndex++)
-                {
-                    triangles[triangleIndex] = chunk.triangleBuffer[triangleIndex].Value;
+                for (int triangleIndex = 0; triangleIndex < triangles.Length; triangleIndex++)
+                { 
+                    triangles[i] = triangleBuffer[triangleIndex].Value;
                 }
-
-                chunk.triangleBuffer.Clear();
 
                 // Mesh
                 Mesh mesh = new Mesh();
-                mesh.vertices = vertice3.ToArray();
+
+                mesh.vertices = vertices;
                 mesh.triangles = triangles;
 
                 meshFilter.sharedMesh = mesh;
 
+                Debug.Log("Mesh Triangles = " + triangleBuffer.Length);
             }
 
             entityNativeArray.Dispose();
