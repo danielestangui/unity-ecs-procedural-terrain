@@ -1,12 +1,6 @@
-#define DEBUG_TerrainGenerator__DrawCorner
-#define DEBUG_TerrainGenerator__DrawChunkBounds
-
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
-using UnityEngine;
 using TerrainGenerator.Utils;
 
 namespace TerrainGenerator 
@@ -33,65 +27,74 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<ChunkComponent>>()) 
+            foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
             {
-                GenerateTerrainData(transform.ValueRO, ref chunk.ValueRW);
+                chunk.GridVertexArray = GenerateGridVertexData(chunk.Position, chunk.Resolution, chunk.Size);
+                chunk.CellArray = GenerateCellData(chunk.Resolution);
             };
         }
 
-        private void GenerateTerrainData(LocalTransform transform, ref ChunkComponent chunk) 
+        /// <summary>
+        /// Generate all chunk's grid vertex data
+        /// </summary>
+        /// <param name="position"> Chunk pivot postion </param>
+        /// <param name="resolution"> Number of grid vertex per chunk side </param>
+        /// <param name="size"> Size of the chunk </param>
+        /// <returns></returns>
+        private GridVertex[] GenerateGridVertexData(float3 position, int resolution, float size) 
         {
-            int resolution = chunk.resolution;
-            int resolution2 = resolution * resolution;
+            GridVertex[] gridVertexArray = new GridVertex[resolution * resolution * resolution];
 
-            // Vertices
-            Vertex[] corner = chunk.vertices.ToArray();
+            float3 centerOfset = new float3(-1, -1, -1) * size / 2;
 
-            float3 centerOfset = new float3(-1, -1, -1) * chunk.size / 2;
-
-            for (int i = 0; i < chunk.vertices.Length; i++)
+            for (int i = 0; i < gridVertexArray.Length; i++)
             {
                 //Corner info
-                corner[i].position = transform.Position + ((float3)MeshMaths.IndexToPosition(i, resolution)/(resolution - 1)) * chunk.size + centerOfset;
-                corner[i].value = MyNoise.PerlinNoise3D.DensityFunction(corner[i].position);
+                gridVertexArray[i].position = position + ((float3)MeshMaths.IndexToPosition(i, resolution) / (resolution - 1)) * size + centerOfset;
+                gridVertexArray[i].value = MyNoise.PerlinNoise3D.DensityFunction(gridVertexArray[i].position);
             }
 
-            // Celdas
-            Cell[] cells = chunk.cells.ToArray();
+            return gridVertexArray;
+        }
+
+        /// <summary>
+        /// Generate all chunk's cells data
+        /// </summary>
+        /// <param name="resolution"> Number of grid vertex per chunk side </param>
+        /// <returns></returns>
+        private Cell[] GenerateCellData(int resolution) 
+        {
+            int cellResolution = (resolution - 1);
+            int cellArrayResolution = cellResolution * cellResolution * cellResolution;
+            int resolution2 = resolution * resolution;
+
+            Cell[] cellArray = new Cell[cellArrayResolution];
 
             int cellIndex = 0;
 
-            for (int z = 0; z < resolution -1; z++) 
+            for (int z = 0; z < resolution - 1; z++)
             {
                 for (int y = 0; y < resolution - 1; y++)
                 {
                     for (int x = 0; x < resolution - 1; x++)
                     {
-                        int verticeIndex = MeshMaths.PositionToIndex(new int3(x,y,z), resolution);
+                        int verticeIndex = MeshMaths.PositionToIndex(new int3(x, y, z), resolution);
 
-                        cells[cellIndex].corner0 = verticeIndex;
-                        cells[cellIndex].corner1 = verticeIndex + 1;
-                        cells[cellIndex].corner2 = verticeIndex + resolution;
-                        cells[cellIndex].corner3 = verticeIndex + 1 + resolution;
-                        cells[cellIndex].corner4 = verticeIndex + resolution2;
-                        cells[cellIndex].corner5 = verticeIndex + 1 + resolution2;
-                        cells[cellIndex].corner6 = verticeIndex + resolution + resolution2;
-                        cells[cellIndex].corner7 = verticeIndex + 1 + resolution + resolution2;
-
-/*                        Debug.Log($"Cell {cellIndex}: " +
-                            $"[{cells[cellIndex].corner0}, {cells[cellIndex].corner1}, " +
-                            $"{cells[cellIndex].corner2}, {cells[cellIndex].corner3}, " +
-                            $"{cells[cellIndex].corner4}, {cells[cellIndex].corner5}, " +
-                            $"{cells[cellIndex].corner6}, {cells[cellIndex].corner7}]");*/
+                        cellArray[cellIndex].corner0 = verticeIndex;
+                        cellArray[cellIndex].corner1 = verticeIndex + 1;
+                        cellArray[cellIndex].corner2 = verticeIndex + resolution;
+                        cellArray[cellIndex].corner3 = verticeIndex + 1 + resolution;
+                        cellArray[cellIndex].corner4 = verticeIndex + resolution2;
+                        cellArray[cellIndex].corner5 = verticeIndex + 1 + resolution2;
+                        cellArray[cellIndex].corner6 = verticeIndex + resolution + resolution2;
+                        cellArray[cellIndex].corner7 = verticeIndex + 1 + resolution + resolution2;
 
                         cellIndex++;
                     }
                 }
             }
 
-            NativeArray<Vertex>.Copy(corner, chunk.vertices, corner.Length);
-            NativeArray<Cell>.Copy(cells, chunk.cells, cells.Length);
-        }
+            return cellArray;
+        }   
     }  
 }
-

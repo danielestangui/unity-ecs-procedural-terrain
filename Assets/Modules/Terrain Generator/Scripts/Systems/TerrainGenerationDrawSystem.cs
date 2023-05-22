@@ -1,4 +1,5 @@
-#define DEBUG_TerrainGenerator__DrawCorners
+#define DEBUG_TerrainGenerator__GridVertex
+//#define DEBUG_TerrainGenerator__GridVertexIndex
 #define DEBUG_TerrainGenerator__DrawChunkBounds
 
 using Unity.Burst;
@@ -15,6 +16,7 @@ namespace TerrainGenerator
     [BurstCompile]
     public partial struct TerrainGeneratorDrawSystem : ISystem
     {
+        private const float gizmoSphereRadiusFactor = 0.05f;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -29,45 +31,48 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<ChunkComponent>>())
+            foreach (var chunk in SystemAPI.Query<ChunkAspect>())
             {
+
 #if DEBUG_TerrainGenerator__DrawChunkBounds
-                DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
+                DrawBounds(chunk.Position, chunk.Size);
 #endif
-#if DEBUG_TerrainGenerator__DrawCorners
-                DrawCorners(transform.ValueRO, chunk.ValueRO);
+
+#if DEBUG_TerrainGenerator__GridVertex
+                float gizmoSphereRadius = chunk.Size / chunk.Resolution * gizmoSphereRadiusFactor;
+                DrawCorners(chunk.GridVertexArray, gizmoSphereRadius);
 #endif
 
             };
         }
 
         /// <summary>
-        /// Dibujas los limites del Chunk
+        /// Draw a box with the boundaries of the chunk
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
+        /// <param name="position"> Chunk pivot postion </param>
+        /// <param name="size"> Size of the chunk </param>
         private void DrawBounds(float3 position, float size)
         {
             Draw.DrawCube(position, size, Color.yellow);
         }
 
-        private void DrawCorners(LocalTransform transform, ChunkComponent chunk)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gridVertexArray"></param>
+        /// <param name="gizmoSphereRadius"></param>
+        private void DrawCorners(GridVertex[] gridVertexArray, float gizmoSphereRadius)
         {
-            // Draw Corners
-            Vertex[] corner = chunk.vertices.ToArray();
-            int resolution = chunk.resolution;
 
-            float gizmoSphereRadius = chunk.size / resolution * 0.05f;
-
-            for (int i = 0; i < chunk.vertices.Length; i++)
+            for (int i = 0; i < gridVertexArray.Length; i++)
             {
-                Draw.DrawSphere(corner[i].position, gizmoSphereRadius, corner[i].value < 0 ? Color.white : Color.black);
-
-                float3 textOffset = new float3(1, 1, 0) * gizmoSphereRadius;
-                //Draw.DrawText(corner[i].position + textOffset, i.ToString());
+                Draw.DrawSphere(gridVertexArray[i].position, gizmoSphereRadius, gridVertexArray[i].value < 0 ? Color.white : Color.black);
+#if DEBUG_TerrainGenerator__GridVertexIndex
+                float3 gridVertexIndexOffset = new float3(1, 1, 0) * gizmoSphereRadius;
+                Draw.DrawText(gridVertexArray[i].position + gridVertexIndexOffset, i.ToString());
+# endif
             }
         }
 
     }
-
 }

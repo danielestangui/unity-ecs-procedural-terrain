@@ -36,30 +36,30 @@ namespace TerrainGenerator
         new Vector3( 1, 1, 1 ),
         };
 
-        public static VerticeElement CalculatePoint(int index, Vertex[] vertices, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges, Cell cell)
+        public static VerticeElement CalculatePoint(int index, GridVertex[] vertices, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
         {
             int corners = 0;
 
             int[] cornersArray = 
                 {
-                    cell.corner0,
-                    cell.corner1,
-                    cell.corner2,
-                    cell.corner3,
-                    cell.corner4,
-                    cell.corner5,
-                    cell.corner6,
-                    cell.corner7
+                    cells[index].corner0,
+                    cells[index].corner1,
+                    cells[index].corner2,
+                    cells[index].corner3,
+                    cells[index].corner4,
+                    cells[index].corner5,
+                    cells[index].corner6,
+                    cells[index].corner7
                 };
 
-            corners |= (vertices[cell.corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
-            corners |= (vertices[cell.corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
-            corners |= (vertices[cell.corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
-            corners |= (vertices[cell.corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
-            corners |= (vertices[cell.corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
-            corners |= (vertices[cell.corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
-            corners |= (vertices[cell.corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
-            corners |= (vertices[cell.corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
+            corners |= (vertices[cells[index].corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
+            corners |= (vertices[cells[index].corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
+            corners |= (vertices[cells[index].corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
+            corners |= (vertices[cells[index].corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
+            corners |= (vertices[cells[index].corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
+            corners |= (vertices[cells[index].corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
+            corners |= (vertices[cells[index].corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
+            corners |= (vertices[cells[index].corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
 
             if (corners == 0 || corners == 255)
             {

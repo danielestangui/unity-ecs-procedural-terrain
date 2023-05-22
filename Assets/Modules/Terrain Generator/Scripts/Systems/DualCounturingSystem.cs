@@ -27,18 +27,14 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var (verticesBuffer, edgesBuffer, triangleBuffer, chunk) in 
-                SystemAPI.Query<DynamicBuffer<VerticesBuffer>, DynamicBuffer<IntersectingEdgesBuffer>, DynamicBuffer<TrianglesBuffer>, RefRW<ChunkComponent>>())
+            foreach (var chunk in SystemAPI.Query<ChunkAspect>())
             {
-                Cell[] cells = chunk.ValueRO.cells.ToArray();
-                Vertex[] corner = chunk.ValueRO.vertices.ToArray();
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
 
-                for (int i = 0; i < cells.Length; i++)
+                // Llena el buffer de vertices
+                for (int i = 0; i < chunk.CellArray.Length; i++)
                 {
-                    VerticeElement vertice = DualContouring.CalculatePoint(i,corner, cells, chunk.ValueRO.resolution, ref edges, cells[i]);
-
-                    cells[i].isCrossPoint = !vertice.position.Equals(float3.zero);
+                    VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
 
                     if (!vertice.position.Equals(float3.zero)) 
                     {
@@ -48,35 +44,39 @@ namespace TerrainGenerator
                             vertice = vertice 
                         };
 
-                        cells[i].crossPointIndex = verticesBuffer.Length;
-                        verticesBuffer.Add(element);
+                        chunk.CellArray[i].crossPointIndex = chunk.verticesBuffer.Length;
+                        chunk.verticesBuffer.Add(element);
                     }
 
                 }
 
-                Debug.Log($"Edges: {edges.ToArray().Length}");
+                Debug.Log($"Vertrices: {chunk.verticesBuffer.Length}");
 
+                // Copia la lista para pasarla al bufer
                 foreach (IntersectingEdgesElement element  in edges) 
                 {
-                    edgesBuffer.Add(new IntersectingEdgesBuffer
+                    chunk.edgesBuffer.Add(new IntersectingEdgesBuffer
                     {
                         edgeData = element
                     });
                 }
 
-                for (int i = 0; i < edgesBuffer.Length; i++)
+                Debug.Log($"Edges: {chunk.edgesBuffer.Length}");
+
+                // Crea los triangulos
+                for (int i = 0; i < chunk.edgesBuffer.Length; i++)
                 {
-                    int[] tri = GenerateTriangles(edgesBuffer[i], verticesBuffer);
+                    int[] tri = GenerateTriangles(chunk.edgesBuffer[i], chunk.verticesBuffer);
 
                     for (int j = 0; j < tri.Length; j++)
                     {
-                        triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
+                        chunk.triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
                     }
                 }
 
-                edgesBuffer.Clear();
+                Debug.Log($"Triangles: {chunk.triangleBuffer.Length}");
 
-                NativeArray<Cell>.Copy(cells, chunk.ValueRW.cells, cells.Length);
+                chunk.edgesBuffer.Clear();
             };
         }
 
@@ -96,32 +96,5 @@ namespace TerrainGenerator
         }
     }
 
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(DualCounturingSystem))]
-    public partial struct DualCounturingDrawSystem : ISystem
-    {
-
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
-        {
-        }
-
-        [BurstCompile]
-        public void OnDestroy(ref SystemState state)
-        {
-        }
-
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
-        {
-            foreach (var buffer in SystemAPI.Query<DynamicBuffer<VerticesBuffer>>())
-            {
-                for (int i = 0; i < buffer.Length; i++)
-                {
-                    Draw.DrawSphere(buffer[i].vertice.position, 0.1f, Color.red);
-                    Draw.DrawLine(buffer[i].vertice.position, (buffer[i].vertice.position + buffer[i].vertice.normal * 0.2f), Color.blue);
-                }
-            };
-        }
-    }
+   
 }

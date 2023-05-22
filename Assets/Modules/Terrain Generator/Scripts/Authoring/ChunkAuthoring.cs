@@ -36,8 +36,8 @@ namespace TerrainGenerator
                 {
                     resolution = authoring.resolution,
                     size = authoring.size,
-                    vertices = new NativeArray<Vertex>(vertexResolution, Allocator.Persistent),
-                    cells = new NativeArray<Cell>(cellResolution, Allocator.Persistent),
+                    gridVertexNativeArray = new NativeArray<GridVertex>(vertexResolution, Allocator.Persistent),
+                    cellNativeArray = new NativeArray<Cell>(cellResolution, Allocator.Persistent),
                     //frequency = authoring.threshold,
                     //threshold = authoring.frequency
                 };
@@ -54,14 +54,14 @@ namespace TerrainGenerator
     {
         public int resolution;
         public float size;
-        public NativeArray<Vertex> vertices;
-        public NativeArray<Cell> cells;
+        public NativeArray<GridVertex> gridVertexNativeArray;
+        public NativeArray<Cell> cellNativeArray;
 
         //public float frequency;
         //public float threshold;
     }
 
-    public struct Vertex
+    public struct GridVertex
     {
         public float3 position;
         public float value;
@@ -93,7 +93,6 @@ namespace TerrainGenerator
         public int corner7;
 
         public int crossPointIndex;
-        public bool isCrossPoint;
     }
 
     /// <summary>

@@ -25,50 +25,44 @@ namespace TerrainGenerator
 
         private void LateUpdate()
         {
-            EntityQuery chunkEntityQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(ChunkComponent));
+            EntityQuery chunkEntityQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(ChunkAspect));
             NativeArray<Entity> entityNativeArray = chunkEntityQuery.ToEntityArray(Allocator.Temp);
 
             Debug.Log($"Numero de chunks: {entityNativeArray.Length}");
 
-            for (int i = 0; i < entityNativeArray.Length; i++)
+            for (int entityIndex = 0; entityIndex < entityNativeArray.Length; entityIndex++)
             {
+                ChunkAspect chunk = entityManager.GetAspect<ChunkAspect>(entityNativeArray[entityIndex]);
 
-                // Vetrtices Fake
-                Vertex[] vertices =
-                    World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<ChunkComponent>(entityNativeArray[i]).vertices.ToArray(); 
-                Debug.Log($"Chunk {i}: Tiene {vertices.Length} vertices.");
-
-                // Vertices Reales
-                DynamicBuffer<VerticesBuffer> buffer = entityManager.GetBuffer<VerticesBuffer>(entityNativeArray[i]);
-                Debug.Log($"Buffer {i}: Tiene {buffer.Length} vertices.");
+                // Vertices
+                Debug.Log($"Buffer {entityIndex}: Tiene {chunk.verticesBuffer} vertices.");
 
                 List<Vector3> vertice3 = new List<Vector3>();
 
-                foreach (VerticesBuffer item in buffer)
+                foreach (VerticesBuffer item in chunk.verticesBuffer)
                 {
                     vertice3.Add(item.vertice.position);
                 }
 
-                buffer.Clear();
+                chunk.verticesBuffer.Clear();
 
                 // Triangles
-                DynamicBuffer<TrianglesBuffer> trianglesbuffer = entityManager.GetBuffer<TrianglesBuffer>(entityNativeArray[i]);
-                List<int> trianglesInt = new List<int>();
+                int[] triangles = new int[chunk.triangleBuffer.Length];
 
-                foreach (TrianglesBuffer item in trianglesbuffer)
+                for (int triangleIndex = 0; triangleIndex < chunk.triangleBuffer.Length; triangleIndex++)
                 {
-                    trianglesInt.Add(item.Value);
+                    triangles[triangleIndex] = chunk.triangleBuffer[triangleIndex].Value;
                 }
-                trianglesbuffer.Clear();
+
+                chunk.triangleBuffer.Clear();
 
                 // Mesh
                 Mesh mesh = new Mesh();
                 mesh.vertices = vertice3.ToArray();
-                mesh.triangles = trianglesInt.ToArray();
+                mesh.triangles = triangles;
 
                 meshFilter.sharedMesh = mesh;
 
-                Debug.Log("Mesh Triangles = " + trianglesbuffer.Length);
             }
 
             entityNativeArray.Dispose();
