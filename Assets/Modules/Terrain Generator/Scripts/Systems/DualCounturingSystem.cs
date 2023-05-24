@@ -42,6 +42,8 @@ namespace TerrainGenerator
                 Debug.Log($"Vertrices: ({chunk.verticesBuffer.Length}) {msg}");
 
                 // Copia la lista para pasarla al bufer
+                chunk.edgesBuffer.Clear();
+
                 foreach (IntersectingEdgesElement element  in edges) 
                 {
                     chunk.edgesBuffer.Add(new IntersectingEdgesBuffer
@@ -63,9 +65,7 @@ namespace TerrainGenerator
                     }
                 }
 
-                Debug.Log($"Triangles: {chunk.triangleBuffer[23].Value}");
-
-                chunk.edgesBuffer.Clear();
+                //Debug.Log($"Triangles: {chunk.triangleBuffer[23].Value}");
             };
         }
 

@@ -1,6 +1,9 @@
 //#define DEBUG_TerrainGenerator__DrawChunkBounds
-//#define DEBUG_TerrainGenerator__GridVertex
-//#define DEBUG_TerrainGenerator__GridVertexIndex
+#define DEBUG_TerrainGenerator__GridVertex
+#define DEBUG_TerrainGenerator__GridVertexIndex
+#define DEBUG_TerrainGenerator__DrawCell
+#define DEBUG_TerrainGenerator__DrawCellWithVertice
+#define DEBUG_TerrainGenerator__DrawCellIndex
 
 using Unity.Burst;
 using Unity.Entities;
@@ -42,6 +45,17 @@ namespace TerrainGenerator
                 float gizmoSphereRadius = chunk.Size / chunk.Resolution * gizmoSphereRadiusFactor;
                 DrawCorners(chunk.GridVertexArray, gizmoSphereRadius);
 #endif
+
+                bool drawWithVertiece = false;
+
+#if DEBUG_TerrainGenerator__DrawCellWithVertice
+                drawWithVertiece = true;
+#endif
+
+#if DEBUG_TerrainGenerator__DrawCell
+                DrawCells(chunk.GridVertexArray, chunk.CellArray, drawWithVertiece);
+#endif
+
             };
         }
 
@@ -70,6 +84,56 @@ namespace TerrainGenerator
                 float3 gridVertexIndexOffset = new float3(1, 1, 0) * gizmoSphereRadius;
                 Draw.DrawText(gridVertexArray[i].position + gridVertexIndexOffset, i.ToString());
 # endif
+            }
+        }
+
+        private void DrawCells(GridVertex[] gridVertex, Cell[] cells, bool cellWithVertice = false)
+        {
+            for (int cellIndex = 0; cellIndex < cells.Length; cellIndex++)
+            {
+                //If the corner has a vertice
+                if (cellWithVertice) 
+                {
+                    // Esto hay que refactorizarlo pero bueno, me sirve para probar
+                    bool control = gridVertex[cells[cellIndex].corner0].value > 0;
+                    bool drawCell = false;
+
+                    control = (control == (gridVertex[cells[cellIndex].corner1].value > 0));
+                    drawCell = !control;
+                    control = (control == (gridVertex[cells[cellIndex].corner2].value > 0));
+                    if (!control) continue;
+                    control = (control == (gridVertex[cells[cellIndex].corner3].value > 0));
+                    if (!control) continue;
+                    control = (control == (gridVertex[cells[cellIndex].corner4].value > 0));
+                    if (!control) continue;
+                    control = (control == (gridVertex[cells[cellIndex].corner5].value > 0));
+                    if (!control) continue;
+                    control = (control == (gridVertex[cells[cellIndex].corner6].value > 0));
+                    if (!control) continue;
+                    control = (control == (gridVertex[cells[cellIndex].corner7].value > 0));
+                    if (!control) continue;
+                }
+
+
+                float3[] corners = {
+                    gridVertex[cells[cellIndex].corner0].position,
+                    gridVertex[cells[cellIndex].corner1].position,
+                    gridVertex[cells[cellIndex].corner2].position,
+                    gridVertex[cells[cellIndex].corner3].position,
+                    gridVertex[cells[cellIndex].corner4].position,
+                    gridVertex[cells[cellIndex].corner5].position,
+                    gridVertex[cells[cellIndex].corner6].position,
+                    gridVertex[cells[cellIndex].corner7].position
+                };
+
+                float side = Vector3.Distance(gridVertex[cells[cellIndex].corner0].position, gridVertex[cells[cellIndex].corner1].position);
+                float3 center = MeshMaths.GetCenterOfCube(corners);
+
+                Draw.DrawCube(center, side, Color.green);
+
+#if DEBUG_TerrainGenerator__DrawCellIndex
+                Draw.DrawText(center, $"[{cellIndex}]");
+#endif
             }
         }
     }

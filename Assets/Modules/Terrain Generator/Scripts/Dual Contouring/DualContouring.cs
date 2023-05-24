@@ -229,7 +229,7 @@ namespace TerrainGenerator
 
         private static int GetAxis(int c1, int c2) 
         {
-            Debug.Log($"Puntos a evaluar; {c1}, {c2}");
+            //Debug.Log($"Puntos a evaluar; {c1}, {c2}");
 
             return AXIS_X;
         }
