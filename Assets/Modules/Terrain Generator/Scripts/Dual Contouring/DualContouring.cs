@@ -40,7 +40,7 @@ namespace TerrainGenerator
         new Vector3( 1, 1, 1 ),
         };
 
-        public static VerticeElement CalculatePoint(int index, GridVertex[] vertices, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
+        public static VerticeElement CalculatePoint(int index, GridVertex[] gridVertex, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
         {
             int corners = 0;
 
@@ -56,14 +56,14 @@ namespace TerrainGenerator
                     cells[index].corner7
                 };
 
-            corners |= (vertices[cells[index].corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
-            corners |= (vertices[cells[index].corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
-            corners |= (vertices[cells[index].corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
-            corners |= (vertices[cells[index].corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
-            corners |= (vertices[cells[index].corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
-            corners |= (vertices[cells[index].corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
-            corners |= (vertices[cells[index].corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
-            corners |= (vertices[cells[index].corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
+            corners |= (gridVertex[cells[index].corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
+            corners |= (gridVertex[cells[index].corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
+            corners |= (gridVertex[cells[index].corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
+            corners |= (gridVertex[cells[index].corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
+            corners |= (gridVertex[cells[index].corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
+            corners |= (gridVertex[cells[index].corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
+            corners |= (gridVertex[cells[index].corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
+            corners |= (gridVertex[cells[index].corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
 
             if (corners == 0 || corners == 255)
             {
@@ -99,8 +99,8 @@ namespace TerrainGenerator
                     continue;
                 }
 
-                float3 p1 = vertices[cornersArray[c1]].position;
-                float3 p2 = vertices[cornersArray[c2]].position;
+                float3 p1 = gridVertex[cornersArray[c1]].position;
+                float3 p2 = gridVertex[cornersArray[c2]].position;
 
                 float3 p = ApproximateZeroCrossingPosition(p1, p2);
 
@@ -113,18 +113,22 @@ namespace TerrainGenerator
 
                 averageNormal += n;
 
-                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c2],cells);
+                // Calcualate Edge
+
+                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c2],cells, gridVertex, resolution);
 
                 IntersectingEdgesElement edge = new IntersectingEdgesElement
                 {
                     vertexIndex0 = cornersArray[c1],
                     vertexIndex1 = cornersArray[c2],
-                    axis = GetAxis(c1, c2),
+                    axis = GetAxis(c1, c2, resolution, gridVertex),
                     sharedCells00 = surrondingCells[0],
                     sharedCells01 = surrondingCells[1],
                     sharedCells10 = surrondingCells[2],
                     sharedCells11 = surrondingCells[3]
                 };
+
+                Debug.Log($"Edge {edge.vertexIndex0}, {edge.vertexIndex1}: {edge.axis}");
 
                 edges.Add(edge);
                 edgeCount++;
@@ -188,9 +192,23 @@ namespace TerrainGenerator
             return  (float3) new Vector3(dx, dy, dz).normalized;
         }
 
-        private static Cell[] GetSurrondingCells(int index0, int index1 ,Cell[] cells) 
+        private static Cell[] GetSurrondingCells(int index0, int index1 ,Cell[] cells, GridVertex[] gridVertex, int resolution) 
         {
-            Cell[] surrondigCells = new Cell[8];
+            int axis = GetAxis(index0, index1, resolution, gridVertex);
+
+            Cell[] surrondigCells = new Cell[4];
+            int surrondigCellsCount = 0;
+
+            for (int i = 0; i < cells.Length || surrondigCellsCount < surrondigCells.Length; i++)
+            {
+                if (CellContainsVecrtiece(index0, cells[i]) && CellContainsVecrtiece(index1, cells[i])) 
+                {
+                    surrondigCells[surrondigCellsCount] = cells[i];
+                    surrondigCellsCount++;
+                }
+            }
+
+            
 
             int cellIndex = 0;
 
@@ -227,11 +245,24 @@ namespace TerrainGenerator
             return control;
         }
 
-        private static int GetAxis(int c1, int c2) 
+        private static int GetAxis(int c1, int c2, int resolution, GridVertex[] gridVertex) 
         {
-            //Debug.Log($"Puntos a evaluar; {c1}, {c2}");
+            int diference = Math.Abs(c2 - c1);
 
-            return AXIS_X;
+            if (diference == 1)
+            {
+                return AXIS_X;
+            }
+            else if (diference == (resolution - 1))
+            {
+                return AXIS_Y;
+            }
+            else if (diference == (resolution - 1) * (resolution- 1))
+            {
+                return AXIS_Z;
+            }
+            else 
+                return -1;
         }
     }
 }

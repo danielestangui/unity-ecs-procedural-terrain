@@ -105,6 +105,7 @@ namespace TerrainGenerator
 
     public struct VerticeElement 
     {
+        public int index;
         public float3 position;
         public float3 normal;
         public Cell cell;
