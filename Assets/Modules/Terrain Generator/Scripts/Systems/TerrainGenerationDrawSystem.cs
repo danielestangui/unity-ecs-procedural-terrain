@@ -94,24 +94,22 @@ namespace TerrainGenerator
                 //If the corner has a vertice
                 if (cellWithVertice) 
                 {
-                    // Esto hay que refactorizarlo pero bueno, me sirve para probar
-                    bool control = gridVertex[cells[cellIndex].corner0].value > 0;
-                    bool drawCell = false;
+                    int control = 0;
 
-                    control = (control == (gridVertex[cells[cellIndex].corner1].value > 0));
-                    drawCell = !control;
-                    control = (control == (gridVertex[cells[cellIndex].corner2].value > 0));
-                    if (!control) continue;
-                    control = (control == (gridVertex[cells[cellIndex].corner3].value > 0));
-                    if (!control) continue;
-                    control = (control == (gridVertex[cells[cellIndex].corner4].value > 0));
-                    if (!control) continue;
-                    control = (control == (gridVertex[cells[cellIndex].corner5].value > 0));
-                    if (!control) continue;
-                    control = (control == (gridVertex[cells[cellIndex].corner6].value > 0));
-                    if (!control) continue;
-                    control = (control == (gridVertex[cells[cellIndex].corner7].value > 0));
-                    if (!control) continue;
+                    control |= (gridVertex[cells[cellIndex].corner0].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner1].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner2].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner3].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner4].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner5].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner6].value < 0.0f ? 0 : 1) << 0;
+                    control |= (gridVertex[cells[cellIndex].corner7].value < 0.0f ? 0 : 1) << 0;
+
+
+                    if (control == 0 || control == 255)
+                    {
+                        continue;
+                    }
                 }
 
 
