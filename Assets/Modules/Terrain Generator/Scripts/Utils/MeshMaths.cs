@@ -57,5 +57,15 @@ namespace TerrainGenerator.Utils
 
             return center;
         }
+
+        public static bool VertexIsBorder(GridVertex vertex, int resolution)
+        {
+            int3 position = IndexToPosition(vertex.index, resolution);
+
+            return
+                (position.x == 0 || position.x == (resolution - 1)) ||
+                (position.y == 0 || position.y == (resolution - 1)) ||
+                (position.z == 0 || position.z == (resolution - 1));
+        }
     }
 }

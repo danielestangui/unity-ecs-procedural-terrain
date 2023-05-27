@@ -1,7 +1,6 @@
 #define DEBUG_DualContouring__DrawVertex
-//#define DEBUG_DualContouring__DrawNormals
-
-
+#define DEBUG_DualContouring__DrawVertexIndex
+#define DEBUG_DualContouring__DrawNormals
 
 using Unity.Burst;
 using Unity.Entities;
@@ -35,16 +34,22 @@ namespace TerrainGenerator
             Color vertexColor = Color.red;
             Color normalColor = Color.blue;
 
-            foreach (var VerticeBuffer in SystemAPI.Query<DynamicBuffer<VerticesBuffer>>())
+            foreach (var vertex in SystemAPI.Query<DynamicBuffer<VerticesBuffer>>())
             {
-                for (int i = 0; i < VerticeBuffer.Length; i++)
+                for (int i = 0; i < vertex.Length; i++)
                 {
 #if DEBUG_DualContouring__DrawVertex
-                    Draw.DrawSphere(VerticeBuffer[i].vertice.position, vertexRadius, vertexColor);
+                    Draw.DrawSphere(vertex[i].vertice.position, vertexRadius, vertexColor);
+#endif
+#if DEBUG_DualContouring__DrawVertex
+                    float3 vertexIndexOffset = new float3(1, 1, 0) * vertexRadius;
+                    Draw.DrawText(vertex[i].vertice.position + vertexIndexOffset, i.ToString());
 #endif
 
+
+
 #if DEBUG_DualContouring__DrawNormals
-                    Draw.DrawLine(buffer[i].vertice.position, (buffer[i].vertice.position + buffer[i].vertice.normal * normalLenght), normalColor);
+                    Draw.DrawLine(vertex[i].vertice.position, (vertex[i].vertice.position + vertex[i].vertice.normal * normalLenght), normalColor);
 #endif
                     }
             };

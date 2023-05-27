@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 
 namespace TerrainGenerator
@@ -34,6 +35,15 @@ namespace TerrainGenerator
         public float Size 
         {
             get => chunk.ValueRO.size;
+        }
+
+        public void GetVerticeFromCell(Cell cell, ref VerticeElement vertex) 
+        {
+            for (int i = 0; i < verticesBuffer.Length; i++)
+            {
+                if (verticesBuffer[i].vertice.cell.index == cell.index)
+                    vertex = verticesBuffer[i].vertice;
+            }
         }
 
         public GridVertex[] GridVertexArray 

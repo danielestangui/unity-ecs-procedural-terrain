@@ -40,30 +40,30 @@ namespace TerrainGenerator
         new Vector3( 1, 1, 1 ),
         };
 
-        public static VerticeElement CalculatePoint(int index, GridVertex[] gridVertex, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
+        public static VerticeElement CalculatePoint(int cellIndex, int vertexIndex, GridVertex[] gridVertex, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
         {
             int corners = 0;
 
             int[] cornersArray = 
                 {
-                    cells[index].corner0,
-                    cells[index].corner1,
-                    cells[index].corner2,
-                    cells[index].corner3,
-                    cells[index].corner4,
-                    cells[index].corner5,
-                    cells[index].corner6,
-                    cells[index].corner7
+                    cells[cellIndex].corner0,
+                    cells[cellIndex].corner1,
+                    cells[cellIndex].corner2,
+                    cells[cellIndex].corner3,
+                    cells[cellIndex].corner4,
+                    cells[cellIndex].corner5,
+                    cells[cellIndex].corner6,
+                    cells[cellIndex].corner7
                 };
 
-            corners |= (gridVertex[cells[index].corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
-            corners |= (gridVertex[cells[index].corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
-            corners |= (gridVertex[cells[index].corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
-            corners |= (gridVertex[cells[index].corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
-            corners |= (gridVertex[cells[index].corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
-            corners |= (gridVertex[cells[index].corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
-            corners |= (gridVertex[cells[index].corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
-            corners |= (gridVertex[cells[index].corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
+            corners |= (gridVertex[cells[cellIndex].corner0].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 0;
+            corners |= (gridVertex[cells[cellIndex].corner1].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 1;
+            corners |= (gridVertex[cells[cellIndex].corner2].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 2;
+            corners |= (gridVertex[cells[cellIndex].corner3].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 3;
+            corners |= (gridVertex[cells[cellIndex].corner4].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 4;
+            corners |= (gridVertex[cells[cellIndex].corner5].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 5;
+            corners |= (gridVertex[cells[cellIndex].corner6].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 6;
+            corners |= (gridVertex[cells[cellIndex].corner7].value < 0.0f ? MATERIAL_SOLID : MATERIAL_AIR) << 7;
 
             if (corners == 0 || corners == 255)
             {
@@ -128,10 +128,13 @@ namespace TerrainGenerator
                     sharedCells11 = surrondingCells[3]
                 };
 
-                Debug.Log($"Edge {edge.vertexIndex0}, {edge.vertexIndex1}: {edge.axis}");
-
-                edges.Add(edge);
-                edgeCount++;
+                // Contiene ya este edge
+                if (!edges.Contains(edge))
+                {
+                    //Debug.Log($"[DualContoruing]Edge({edges.Count}) {edge.vertexIndex0}, {edge.vertexIndex1}: {edge.axis}");
+                    edges.Add(edge);
+                    edgeCount++;
+                }
             }
 
             Vector3 qefPosition = Vector3.zero;
@@ -141,9 +144,10 @@ namespace TerrainGenerator
 
             VerticeElement vertice = new VerticeElement
             {
+                index = vertexIndex,
                 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z),
                 normal = averageNormal / edgeCount,
-                cell = cells[index]
+                cell = cells[cellIndex]
             };
 
             return vertice;
@@ -197,32 +201,16 @@ namespace TerrainGenerator
             int axis = GetAxis(index0, index1, resolution, gridVertex);
 
             Cell[] surrondigCells = new Cell[4];
+
             int surrondigCellsCount = 0;
 
-            for (int i = 0; i < cells.Length || surrondigCellsCount < surrondigCells.Length; i++)
+            for (int i = 0; i < cells.Length; i++)
             {
                 if (CellContainsVecrtiece(index0, cells[i]) && CellContainsVecrtiece(index1, cells[i])) 
                 {
+                    //Debug.Log($"[DualContoruing]Celda {cells[i].index} contiene a {index0}, {index1} ");
                     surrondigCells[surrondigCellsCount] = cells[i];
                     surrondigCellsCount++;
-                }
-            }
-
-            
-
-            int cellIndex = 0;
-
-            foreach (Cell cell in cells) 
-            {
-                if (CellContainsVecrtiece(index0, cell) && CellContainsVecrtiece(index1, cell)) 
-                {
-                    if (cellIndex > surrondigCells.Length) 
-                    {
-                        Debug.Log("Error ");
-                        continue;
-                    }
-                    surrondigCells[cellIndex] = cell;
-                    cellIndex++;
                 }
             }
 
@@ -233,14 +221,14 @@ namespace TerrainGenerator
         {
             bool control = false;
 
-            control |= cell.corner0 == vertice;
-            control |= cell.corner1 == vertice;
-            control |= cell.corner2 == vertice;
-            control |= cell.corner3 == vertice;
-            control |= cell.corner4 == vertice;
-            control |= cell.corner5 == vertice;
-            control |= cell.corner6 == vertice;
-            control |= cell.corner7 == vertice;
+            control = control || (cell.corner0 == vertice);
+            control = control || (cell.corner1 == vertice);
+            control = control || (cell.corner2 == vertice);
+            control = control || (cell.corner3 == vertice);
+            control = control || (cell.corner4 == vertice);
+            control = control || (cell.corner5 == vertice);
+            control = control || (cell.corner6 == vertice);
+            control = control || (cell.corner7 == vertice);
 
             return control;
         }
@@ -264,5 +252,5 @@ namespace TerrainGenerator
             else 
                 return -1;
         }
-    }
+    } 
 }

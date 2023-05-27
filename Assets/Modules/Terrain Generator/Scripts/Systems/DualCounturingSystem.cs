@@ -6,6 +6,9 @@ using UnityEngine;
 using TerrainGenerator.Utils;
 using Unity.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework.Constraints;
+using UnityEditor.Animations;
 
 namespace TerrainGenerator
 {
@@ -31,15 +34,9 @@ namespace TerrainGenerator
             {
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
 
+                chunk.verticesBuffer.Clear();
+
                 FillVerticeBuffer(chunk, ref edges);
-
-                string msg = "";
-                for (int j = 0; j < chunk.verticesBuffer.Length; j++)
-                {
-                   msg += chunk.verticesBuffer[j].vertice.cell.index + ", ";
-                }
-
-                Debug.Log($"Vertrices: ({chunk.verticesBuffer.Length}) {msg}");
 
                 // Copia la lista para pasarla al bufer
                 chunk.edgesBuffer.Clear();
@@ -52,20 +49,12 @@ namespace TerrainGenerator
                     });
                 }
 
-                Debug.Log($"Edges: {chunk.edgesBuffer.Length}");
+                Debug.Log($"[DualCounturingSystem]Edges: {chunk.edgesBuffer.Length}");
 
-                // Crea los triangulos
-                for (int i = 0; i < chunk.edgesBuffer.Length; i++)
-                {
-                    int[] tri = GenerateTriangles(chunk.edgesBuffer[i], chunk.verticesBuffer);
-
-                    for (int j = 0; j < tri.Length; j++)
-                    {
-                        chunk.triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
-                    }
-                }
-
-                //Debug.Log($"Triangles: {chunk.triangleBuffer[23].Value}");
+                chunk.triangleBuffer.Clear();
+                GenerateTriangles(chunk);
+               
+                Debug.Log($"[DualCounturingSystem]Edges.Lenght: {chunk.triangleBuffer.Length}");
             };
         }
 
@@ -73,7 +62,7 @@ namespace TerrainGenerator
         {
             for (int i = 0; i < chunk.CellArray.Length; i++)
             {
-                VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
+                VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.verticesBuffer.Length, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
 
                 if (!vertice.position.Equals(float3.zero))
                 {
@@ -84,24 +73,142 @@ namespace TerrainGenerator
                     
                     chunk.verticesBuffer.Add(element);
                 }
+
+                Debug.Log("J");
             }
         }
 
-        private int[] GenerateTriangles(IntersectingEdgesBuffer edge, DynamicBuffer<VerticesBuffer> vertices) 
+        private void GenerateTriangles(ChunkAspect chunk) 
         {
-            List<int> triangles = new List<int>();
+            for (int i = 0; i < chunk.edgesBuffer.Length; i++)
+            {
+                List<int> tri = new List<int>();
 
-            /*triangles.Add(edge.edgeData.sharedCells00.crossPointIndex);
-            triangles.Add(edge.edgeData.sharedCells10.crossPointIndex);
-            triangles.Add(edge.edgeData.sharedCells11.crossPointIndex);
+                GridVertex gridVertex1 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0];
+                GridVertex gridVertex2 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1];
 
-            triangles.Add(edge.edgeData.sharedCells00.crossPointIndex);
-            triangles.Add(edge.edgeData.sharedCells11.crossPointIndex);
-            triangles.Add(edge.edgeData.sharedCells01.crossPointIndex);*/
+                /*Debug.Log($"IsBound: " +
+                    $"{chunk.edgesBuffer[i].edgeData.vertexIndex0}, {MeshMaths.VertexIsBorder(chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0], chunk.Resolution)}, " +
+                    $"{chunk.edgesBuffer[i].edgeData.vertexIndex1}, {MeshMaths.VertexIsBorder(chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1], chunk.Resolution)}");*/
 
-            return triangles.ToArray();
+                // Las aristas que estan incluidas en el bordes del chunk se trataran en otro momento para crear los tris 
+                // Que unen los distintos chunks
+                if (!(MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && 
+                    MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution)))
+                {
+                    // Ordenar cells, damos por hecho que vienen ordeandas 
+                    Debug.Log($"[DualCounturingSystem]Cells: " +
+                        $"{chunk.edgesBuffer[i].edgeData.sharedCells00.index}, " +
+                        $"{chunk.edgesBuffer[i].edgeData.sharedCells01.index}, " +
+                        $"{chunk.edgesBuffer[i].edgeData.sharedCells10.index}, " +
+                        $"{chunk.edgesBuffer[i].edgeData.sharedCells11.index}");
+
+                    // Obtenemos todos los vertices que van a formar el tri
+                    VerticeElement vertex00 = new VerticeElement();
+                    chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells00, ref vertex00);
+
+                    VerticeElement vertex01 = new VerticeElement();
+                    chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells01, ref vertex01);
+
+                    VerticeElement vertex10 = new VerticeElement();
+                    chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells10, ref vertex10);
+
+                    VerticeElement vertex11 = new VerticeElement();
+                    chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells11, ref vertex11);
+
+                    // Se utiliza un vertice como referencia
+                    float3 normal = (vertex00.normal + vertex01.normal + vertex10.normal + vertex11.normal)/4;
+                    Debug.Log($"[DualCounturingSystem]Tris a evaluar normal: {normal}");
+
+                    // Creamos los tris segun el axis
+                    Debug.Log($"[DualCounturingSystem]Axis: {chunk.edgesBuffer[i].edgeData.axis}");
+                    switch (chunk.edgesBuffer[i].edgeData.axis) 
+                    {
+                        case 0:
+                            // Axis X
+
+                            if (vertex00.normal.x > 0)
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex01.index);
+                                tri.Add(vertex11.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex10.index);
+                            }
+                            else 
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex01.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex10.index);
+                                tri.Add(vertex11.index);
+                            }
+
+                            break;
+                        case 1:
+                            // Axis Y
+
+                            if (vertex00.normal.y > 0)
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex01.index);
+                                tri.Add(vertex11.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex10.index);
+                            }
+                            else
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex01.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex10.index);
+                                tri.Add(vertex11.index);
+                            }
+
+                            break;
+                        case 2:
+                            // Axis Z
+
+                            if (vertex00.normal.z > 0)
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex01.index);
+                                tri.Add(vertex11.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex10.index);
+                            }
+                            else
+                            {
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex11.index);
+                                tri.Add(vertex01.index);
+
+                                tri.Add(vertex00.index);
+                                tri.Add(vertex10.index);
+                                tri.Add(vertex11.index);
+                            }
+
+                            break;
+                    }
+
+                    for (int j = 0; j < tri.Count; j++)
+                    {
+                        chunk.triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
+                    }
+
+                    Debug.Log($"[DualCounturingSystem]chunk.triangleBuffer.Length = {chunk.triangleBuffer.Length}");
+                }
+            }
         }
     }
-
-   
 }
