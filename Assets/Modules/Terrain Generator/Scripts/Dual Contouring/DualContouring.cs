@@ -69,6 +69,7 @@ namespace TerrainGenerator
             {
                 return new VerticeElement 
                 {
+                    index = -1,
                     position = Vector3.zero,
                     normal = Vector3.zero
                 };

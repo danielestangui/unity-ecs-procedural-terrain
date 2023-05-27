@@ -1,6 +1,8 @@
 #define DEBUG_DualContouring__DrawVertex
 #define DEBUG_DualContouring__DrawVertexIndex
 #define DEBUG_DualContouring__DrawNormals
+#define DEBUG_DualContouring__DrawInteresectingEdges
+#define DEBUG_DualContouring__DrawInteresectingEdgesIndex
 
 using Unity.Burst;
 using Unity.Entities;
@@ -46,13 +48,26 @@ namespace TerrainGenerator
                     Draw.DrawText(vertex[i].vertice.position + vertexIndexOffset, i.ToString());
 #endif
 
-
-
 #if DEBUG_DualContouring__DrawNormals
                     Draw.DrawLine(vertex[i].vertice.position, (vertex[i].vertice.position + vertex[i].vertice.normal * normalLenght), normalColor);
 #endif
                     }
             };
+#if DEBUG_DualContouring__DrawInteresectingEdges
+            foreach (var chunk in SystemAPI.Query<ChunkAspect>())
+            {
+                for (int i = 0; i < chunk.edgesBuffer.Length; i++)
+                {
+                    GridVertex gridVertex1 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0];
+                    GridVertex gridVertex2 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1];
+
+                    bool isBorder = MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution);
+
+                    Draw.DrawLine(gridVertex1.position, gridVertex2.position, (isBorder) ? Color.magenta : Color.red);
+
+                }
+            };
+#endif
         }
     }
 }

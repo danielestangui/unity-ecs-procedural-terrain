@@ -64,7 +64,7 @@ namespace TerrainGenerator
             {
                 VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.verticesBuffer.Length, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
 
-                if (!vertice.position.Equals(float3.zero))
+                if (vertice.index >= 0)
                 {
                     VerticesBuffer element = new VerticesBuffer
                     {
@@ -73,8 +73,6 @@ namespace TerrainGenerator
                     
                     chunk.verticesBuffer.Add(element);
                 }
-
-                Debug.Log("J");
             }
         }
 
@@ -152,7 +150,7 @@ namespace TerrainGenerator
                         case 1:
                             // Axis Y
 
-                            if (vertex00.normal.y > 0)
+                            if (vertex00.normal.y < 0)
                             {
                                 tri.Add(vertex00.index);
                                 tri.Add(vertex01.index);
