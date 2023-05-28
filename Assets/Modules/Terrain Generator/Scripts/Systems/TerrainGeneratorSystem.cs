@@ -84,8 +84,6 @@ namespace TerrainGenerator
                     {
                         int verticeIndex = MeshMaths.PositionToIndex(new int3(x, y, z), resolution);
 
-                        cellArray[cellIndex].corners = new NativeArray<int>(cellArray[cellIndex].cornersCount, Allocator.Persistent);
-
                         cellArray[cellIndex].index = cellIndex;
                         cellArray[cellIndex].corner0 = verticeIndex;
                         cellArray[cellIndex].corner1 = verticeIndex + 1;

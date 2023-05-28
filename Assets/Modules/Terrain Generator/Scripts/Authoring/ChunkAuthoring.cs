@@ -94,7 +94,6 @@ namespace TerrainGenerator
         public int corner6;
         public int corner7;
 
-        public NativeArray<int> corners;
         public int cornersCount;
     }
 

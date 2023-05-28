@@ -1,6 +1,6 @@
 #define DEBUG_TerrainGenerator__DrawChunkBounds
-#define DEBUG_TerrainGenerator__GridVertex
-#define DEBUG_TerrainGenerator__GridVertexIndex
+//#define DEBUG_TerrainGenerator__GridVertex
+//#define DEBUG_TerrainGenerator__GridVertexIndex
 //#define DEBUG_TerrainGenerator__DrawCell
 //#define DEBUG_TerrainGenerator__DrawCellWithVertice
 //#define DEBUG_TerrainGenerator__DrawCellIndex

@@ -1,8 +1,8 @@
 #define DEBUG_DualContouring__DrawVertex
-#define DEBUG_DualContouring__DrawVertex_Index
+//#define DEBUG_DualContouring__DrawVertex_Index
 #define DEBUG_DualContouring__DrawNormals
 #define DEBUG_DualContouring__DrawInteresectingEdges
-#define DEBUG_DualContouring__DrawInteresectingEdges_Index
+//#define DEBUG_DualContouring__DrawInteresectingEdges_Index
 #define DEBUG_DualContouring__DrawInteresectingEdges_Axis
 
 using Unity.Burst;
@@ -99,12 +99,12 @@ namespace TerrainGenerator
 
                 float3 position = (gridVertex1.position + gridVertex2.position) * 0.5f;
 
-#if DEBUG_DualContouring__DrawInteresectingEdges_Axis
+#if DEBUG_DualContouring__DrawInteresectingEdges_Index
 
                 edgeInfoMsg += edge.index.ToString();
 #endif
 
-#if DEBUG_DualContouring__DrawInteresectingEdges_Index
+#if DEBUG_DualContouring__DrawInteresectingEdges_Axis
                 if (!string.IsNullOrEmpty(edgeInfoMsg))
                     edgeInfoMsg += ":";
 

@@ -123,7 +123,7 @@ namespace TerrainGenerator
                     index = edges.Count,
                     vertexIndex0 = gridVertex[cornersArray[c1]].index,
                     vertexIndex1 = gridVertex[cornersArray[c2]].index,
-                    axis = GetAxis(c1, c2, resolution, gridVertex),
+                    axis = GetAxis(gridVertex[cornersArray[c1]].index, gridVertex[cornersArray[c2]].index, resolution, gridVertex),
                     sharedCells00 = surrondingCells[0],
                     sharedCells01 = surrondingCells[1],
                     sharedCells10 = surrondingCells[2],
@@ -234,9 +234,9 @@ namespace TerrainGenerator
             return control;
         }
 
-        private static int GetAxis(int c1, int c2, int resolution, GridVertex[] gridVertex) 
+        private static int GetAxis(int v1, int v2, int resolution, GridVertex[] gridVertex) 
         {
-            int diference = Math.Abs(c2 - c1);
+            int diference = Math.Abs(v2 - v1);
 
             if (diference == 1)
             {
