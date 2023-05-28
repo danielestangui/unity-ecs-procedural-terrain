@@ -114,7 +114,6 @@ namespace TerrainGenerator
                     VerticeElement vertex11 = new VerticeElement();
                     chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells11, ref vertex11);
 
-                    // Se utiliza un vertice como referencia
                     float3 normal = (vertex00.normal + vertex01.normal + vertex10.normal + vertex11.normal)/4;
                     Debug.Log($"[DualCounturingSystem]Tris a evaluar normal: {normal}");
 
@@ -125,7 +124,7 @@ namespace TerrainGenerator
                         case 0:
                             // Axis X
 
-                            if (vertex00.normal.x > 0)
+                            if (normal.x > 0)
                             {
                                 tri.Add(vertex00.index);
                                 tri.Add(vertex01.index);
@@ -150,7 +149,7 @@ namespace TerrainGenerator
                         case 1:
                             // Axis Y
 
-                            if (vertex00.normal.y < 0)
+                            if (normal.y < 0)
                             {
                                 tri.Add(vertex00.index);
                                 tri.Add(vertex01.index);
@@ -175,7 +174,7 @@ namespace TerrainGenerator
                         case 2:
                             // Axis Z
 
-                            if (vertex00.normal.z > 0)
+                            if (normal.z > 0)
                             {
                                 tri.Add(vertex00.index);
                                 tri.Add(vertex01.index);

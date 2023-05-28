@@ -1,9 +1,9 @@
 #define DEBUG_DualContouring__DrawVertex
-//#define DEBUG_DualContouring__DrawVertex_Index
+#define DEBUG_DualContouring__DrawVertex_Index
 #define DEBUG_DualContouring__DrawNormals
-//#define DEBUG_DualContouring__DrawInteresectingEdges
+#define DEBUG_DualContouring__DrawInteresectingEdges
 //#define DEBUG_DualContouring__DrawInteresectingEdges_Index
-//#define DEBUG_DualContouring__DrawInteresectingEdges_Axis
+#define DEBUG_DualContouring__DrawInteresectingEdges_Axis
 
 using Unity.Burst;
 using Unity.Entities;

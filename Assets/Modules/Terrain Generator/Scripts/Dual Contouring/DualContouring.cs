@@ -43,11 +43,6 @@ namespace TerrainGenerator
         public static VerticeElement CalculatePoint(int cellIndex, int vertexIndex, GridVertex[] gridVertex, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
         {
             int corners = 0;
-
-            if (cellIndex == 10) 
-            {
-                Debug.Log("");
-            }
             int[] cornersArray = 
                 {
                     cells[cellIndex].corner0,
@@ -85,6 +80,8 @@ namespace TerrainGenerator
             //const int MAX_CROSSINGS = 6;
             int edgeCount = 0;
             float3 averageNormal = Vector3.zero;
+            int averageNormalCount = 0;
+
             QefSolver qef = new QefSolver();
 
             //for (int i = 0; i < 12 && edgeCount < MAX_CROSSINGS; i++)
@@ -110,14 +107,11 @@ namespace TerrainGenerator
 
                 float3 p = ApproximateZeroCrossingPosition(p1, p2);
 
-                //Debug.Log($"Para {edgevmap[i][0]} y {edgevmap[i][1]} pinta.");
-
-                //Draw.DrawSphere(p, 0.1f, Color.red);
-
                 float3 n = CalculateSurfaceNormal(p);
                 qef.add(p.x, p.y, p.z, n.x, n.y, n.z);
 
                 averageNormal += n;
+                averageNormalCount++;
 
                 // Calcualate Edge
 
@@ -138,7 +132,6 @@ namespace TerrainGenerator
                 // Contiene ya este edge
                 if (!ContainsEdge(edge, edges))
                 {
-                    //Debug.Log($"[DualContoruing]Edge({edges.Count}) {edge.vertexIndex0}, {edge.vertexIndex1}: {edge.axis}");
                     edges.Add(edge);
                     edgeCount++;
                 }
@@ -147,13 +140,11 @@ namespace TerrainGenerator
             Vector3 qefPosition = Vector3.zero;
             qef.solve(ref qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
 
-            float3 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z);
-
             VerticeElement vertice = new VerticeElement
             {
                 index = vertexIndex,
                 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z),
-                normal = Vector3.Normalize(averageNormal),
+                normal = averageNormal/(float)averageNormalCount,
                 cell = cells[cellIndex]
             };
 
