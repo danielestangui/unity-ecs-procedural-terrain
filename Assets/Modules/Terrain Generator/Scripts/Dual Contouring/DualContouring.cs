@@ -44,6 +44,10 @@ namespace TerrainGenerator
         {
             int corners = 0;
 
+            if (cellIndex == 10) 
+            {
+                Debug.Log("");
+            }
             int[] cornersArray = 
                 {
                     cells[cellIndex].corner0,
@@ -78,12 +82,13 @@ namespace TerrainGenerator
             //Debug.Log($"Conners binary: {Convert.ToString(corners, 2)}");
 
 
-            const int MAX_CROSSINGS = 6;
+            //const int MAX_CROSSINGS = 6;
             int edgeCount = 0;
             float3 averageNormal = Vector3.zero;
             QefSolver qef = new QefSolver();
 
-            for (int i = 0; i < 12 && edgeCount < MAX_CROSSINGS; i++)
+            //for (int i = 0; i < 12 && edgeCount < MAX_CROSSINGS; i++)
+            for (int i = 0; i < 12; i++)
             {
                 int c1 = edgevmap[i][0];
                 int c2 = edgevmap[i][1];
@@ -148,7 +153,7 @@ namespace TerrainGenerator
             {
                 index = vertexIndex,
                 position = new float3(qefPosition.x, qefPosition.y, qefPosition.z),
-                normal = averageNormal / edgeCount,
+                normal = Vector3.Normalize(averageNormal),
                 cell = cells[cellIndex]
             };
 
@@ -258,7 +263,7 @@ namespace TerrainGenerator
         {
             foreach (IntersectingEdgesElement element in edges) 
             {
-                if (edge.vertexIndex0 == element.vertexIndex0 && edge.vertexIndex0 == element.vertexIndex0) 
+                if (edge.vertexIndex0 == element.vertexIndex0 && edge.vertexIndex1 == element.vertexIndex1) 
                 {
                     return true;
                 }
