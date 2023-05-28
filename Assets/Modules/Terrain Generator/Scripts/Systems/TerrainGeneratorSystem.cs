@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using TerrainGenerator.Utils;
+using Unity.Collections;
 
 namespace TerrainGenerator 
 {
@@ -52,7 +53,6 @@ namespace TerrainGenerator
 
             for (int i = 0; i < gridVertexArray.Length; i++)
             {
-                //Corner info
                 gridVertexArray[i].index = i;
                 gridVertexArray[i].position = position + ((float3)MeshMaths.IndexToPosition(i, resolution) / (resolution - 1)) * size + centerOfset;
                 gridVertexArray[i].value = MyNoise.PerlinNoise3D.DensityFunction(gridVertexArray[i].position);
@@ -83,6 +83,8 @@ namespace TerrainGenerator
                     for (int x = 0; x < resolution - 1; x++)
                     {
                         int verticeIndex = MeshMaths.PositionToIndex(new int3(x, y, z), resolution);
+
+                        cellArray[cellIndex].corners = new NativeArray<int>(cellArray[cellIndex].cornersCount, Allocator.Persistent);
 
                         cellArray[cellIndex].index = cellIndex;
                         cellArray[cellIndex].corner0 = verticeIndex;

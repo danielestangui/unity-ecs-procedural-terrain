@@ -22,10 +22,10 @@ namespace TerrainGenerator
 
         public static readonly int[][] edgevmap = new int[12][]
         {
-	        new int[2]{0,4},new int[2]{1,5},new int[2]{2,6},new int[2]{3,7},	// x-axis 
+	        new int[2]{0,4},new int[2]{1,5},new int[2]{2,6},new int[2]{3,7},	// z-axis 
 	        new int[2]{0,2},new int[2]{1,3},new int[2]{4,6},new int[2]{5,7},	// y-axis
-	        new int[2]{0,1},new int[2]{2,3},new int[2]{4,5},new int[2]{6,7}		// z-axis
-        };
+	        new int[2]{0,1},new int[2]{2,3},new int[2]{4,5},new int[2]{6,7}		// x-axis
+        };  
 
         public static readonly Vector3[] CHILD_MIN_OFFSETS =
         {   
@@ -120,8 +120,9 @@ namespace TerrainGenerator
 
                 IntersectingEdgesElement edge = new IntersectingEdgesElement
                 {
-                    vertexIndex0 = cornersArray[c1],
-                    vertexIndex1 = cornersArray[c2],
+                    index = edges.Count,
+                    vertexIndex0 = gridVertex[cornersArray[c1]].index,
+                    vertexIndex1 = gridVertex[cornersArray[c2]].index,
                     axis = GetAxis(c1, c2, resolution, gridVertex),
                     sharedCells00 = surrondingCells[0],
                     sharedCells01 = surrondingCells[1],
@@ -130,7 +131,7 @@ namespace TerrainGenerator
                 };
 
                 // Contiene ya este edge
-                if (!edges.Contains(edge))
+                if (!ContainsEdge(edge, edges))
                 {
                     //Debug.Log($"[DualContoruing]Edge({edges.Count}) {edge.vertexIndex0}, {edge.vertexIndex1}: {edge.axis}");
                     edges.Add(edge);
@@ -199,7 +200,6 @@ namespace TerrainGenerator
 
         private static Cell[] GetSurrondingCells(int index0, int index1 ,Cell[] cells, GridVertex[] gridVertex, int resolution) 
         {
-            int axis = GetAxis(index0, index1, resolution, gridVertex);
 
             Cell[] surrondigCells = new Cell[4];
 
@@ -242,16 +242,29 @@ namespace TerrainGenerator
             {
                 return AXIS_X;
             }
-            else if (diference == (resolution - 1))
+            else if (diference == resolution)
             {
                 return AXIS_Y;
             }
-            else if (diference == (resolution - 1) * (resolution- 1))
+            else if (diference == resolution * resolution)
             {
                 return AXIS_Z;
             }
             else 
                 return -1;
+        }
+
+        private static bool ContainsEdge(IntersectingEdgesElement edge, List<IntersectingEdgesElement> edges) 
+        {
+            foreach (IntersectingEdgesElement element in edges) 
+            {
+                if (edge.vertexIndex0 == element.vertexIndex0 && edge.vertexIndex0 == element.vertexIndex0) 
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     } 
 }

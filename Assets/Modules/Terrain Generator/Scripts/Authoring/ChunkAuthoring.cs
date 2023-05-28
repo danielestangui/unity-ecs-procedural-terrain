@@ -93,6 +93,9 @@ namespace TerrainGenerator
         public int corner5;
         public int corner6;
         public int corner7;
+
+        public NativeArray<int> corners;
+        public int cornersCount;
     }
 
     /// <summary>
@@ -129,6 +132,7 @@ namespace TerrainGenerator
 
     public struct IntersectingEdgesElement
     {
+        public int index;
         public int vertexIndex0;
         public int vertexIndex1;
 
