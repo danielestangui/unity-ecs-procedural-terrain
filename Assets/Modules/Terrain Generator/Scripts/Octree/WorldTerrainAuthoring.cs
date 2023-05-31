@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace TerrainGenerator.Octree 
+namespace TerrainGenerator
 {
     [AddComponentMenu("Terrain Generator/World Terrain")]
     public class WorldTerrainAuthoring : MonoBehaviour
@@ -15,36 +15,40 @@ namespace TerrainGenerator.Octree
         private int maxLodLevels;
         [SerializeField]
         private float size;
+        [SerializeField]
+        private float distanceToCameraPerEachLOD;
 
         public class Baker : Baker<WorldTerrainAuthoring>
         {
             public override void Bake(WorldTerrainAuthoring authoring)
             {
-                OctreeComponent octreeComponent = new OctreeComponent
-                {
-                    maxLodLevels = authoring.maxLodLevels
-                };
-
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
                     size = authoring.size,
-                    level = 0
+                    level = authoring.maxLodLevels,
+                    maxLevel = authoring.maxLodLevels,
+                    activationDistance = authoring.maxLodLevels * authoring.distanceToCameraPerEachLOD
                 };
 
-                AddComponent(octreeComponent);
                 AddComponent(octreeNodeComponent);
+                AddBuffer<OctreeNodeBufferElement>();
             }
         }
     }
 
-    struct OctreeComponent : IComponentData
-    {
-        public int maxLodLevels;
-    }
-
     struct OctreeNodeComponent : IComponentData
     {
+        public bool enable;
         public float size;
         public int level;
+        public int maxLevel;
+        public float activationDistance;
+        public Entity parent;
+    }
+
+    [InternalBufferCapacity(8)]
+    public struct OctreeNodeBufferElement : IBufferElementData
+    {
+        public Entity child;
     }
 }
