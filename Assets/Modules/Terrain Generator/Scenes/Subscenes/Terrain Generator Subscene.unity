@@ -152,9 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 997431e3b9dc71f4e98e8e2286042878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLodLevels: 2
-  size: 1
-  distanceToCameraPerEachLOD: 1
+  size: 2.03
+  maxDepth: 14
 --- !u!4 &25080771
 Transform:
   m_ObjectHideFlags: 0
