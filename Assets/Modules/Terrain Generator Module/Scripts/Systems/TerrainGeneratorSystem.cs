@@ -6,7 +6,7 @@ using Unity.Collections;
 
 namespace TerrainGenerator 
 {
-    public class TerrainGeneratorSystemGroup : ComponentSystemGroup
+    public partial class TerrainGeneratorSystemGroup : ComponentSystemGroup
     {
     }
 

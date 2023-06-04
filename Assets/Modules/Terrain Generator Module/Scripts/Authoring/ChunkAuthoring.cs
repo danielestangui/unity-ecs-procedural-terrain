@@ -23,28 +23,28 @@ namespace TerrainGenerator
         [SerializeField, Range(0, 1)]
         private float threshold;
 
-        public class Baker : Baker<ChunkAuthoring>
+        class Baker : Baker<ChunkAuthoring>
         {
             public override void Bake(ChunkAuthoring authoring)
             {
                 int vertexResolution = authoring.resolution * authoring.resolution * authoring.resolution;
                 int cellResolution = (authoring.resolution - 1) * (authoring.resolution - 1) * (authoring.resolution - 1);
 
+                Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                var data = new ChunkComponent
+                var chunkComponent = new ChunkComponent
                 {
                     resolution = authoring.resolution,
                     size = authoring.size,
                     gridVertexNativeArray = new NativeArray<GridVertex>(vertexResolution, Allocator.Persistent),
                     cellNativeArray = new NativeArray<Cell>(cellResolution, Allocator.Persistent),
-                    //frequency = authoring.threshold,
-                    //threshold = authoring.frequency
                 };
-                AddComponent(data);
 
-                AddBuffer<VerticesBuffer>();
-                AddBuffer<IntersectingEdgesBuffer>();
-                AddBuffer<TrianglesBuffer>();
+                AddComponent(entity, chunkComponent);
+
+                AddBuffer<VerticesBuffer>(entity);
+                AddBuffer<IntersectingEdgesBuffer>(entity);
+                AddBuffer<TrianglesBuffer>(entity);
             }
         }
     }
@@ -55,9 +55,6 @@ namespace TerrainGenerator
         public float size;
         public NativeArray<GridVertex> gridVertexNativeArray;
         public NativeArray<Cell> cellNativeArray;
-
-        //public float frequency;
-        //public float threshold;
     }
 
     public struct GridVertex
