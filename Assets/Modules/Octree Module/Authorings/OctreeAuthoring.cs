@@ -2,6 +2,8 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
+[assembly: RegisterGenericComponentType(typeof(DynamicBuffer<OctreeModule.ChildsNodesBuffer>))]
+
 namespace OctreeModule
 {
     [AddComponentMenu("Octree/Octree Authoring")]
@@ -48,6 +50,11 @@ namespace OctreeModule
         public int depth;
         public Entity parent;
     }
+
+    public struct OctreeBranchComponent : IComponentData
+    {
+        public DynamicBuffer<ChildsNodesBuffer> childsBuffer;
+    }
    
     public struct OctreeLeafComponent : IComponentData 
     {
@@ -56,6 +63,6 @@ namespace OctreeModule
 
     public struct ChildsNodesBuffer : IBufferElementData
     {
-        public Entity child;
+        public Entity entity;
     }
 }

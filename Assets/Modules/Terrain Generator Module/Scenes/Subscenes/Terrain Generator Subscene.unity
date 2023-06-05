@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 25080771}
   - component: {fileID: 25080770}
   m_Layer: 0
-  m_Name: Octree
+  m_Name: '                              '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 997431e3b9dc71f4e98e8e2286042878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 10
+  size: 20
   maxDepth: 2
-  lodDistance: 6
+  lodDistance: 5
 --- !u!4 &25080771
 Transform:
   m_ObjectHideFlags: 0

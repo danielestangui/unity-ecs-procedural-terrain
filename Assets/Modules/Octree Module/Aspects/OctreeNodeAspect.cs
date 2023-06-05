@@ -13,7 +13,7 @@ namespace OctreeModule
 
         private readonly RefRO<LocalTransform> transform;
         private readonly RefRO<OctreeNodeComponent> node;
-        public readonly DynamicBuffer<ChildsNodesBuffer> childsBuffer;
+        private readonly RefRW<OctreeBranchComponent> branch;
 
         public float3 Position
         {
@@ -40,6 +40,12 @@ namespace OctreeModule
             get => node.ValueRO.parent;
         }
 
+        public DynamicBuffer<ChildsNodesBuffer> Childs
+        {
+            get => branch.ValueRO.childsBuffer;
+            set => branch.ValueRW.childsBuffer = value;
+        }
+
         public bool IsRoot()
         {
             return node.ValueRO.parent == Entity.Null;
@@ -47,7 +53,7 @@ namespace OctreeModule
 
         public bool HasChilds()
         {
-            return childsBuffer.Length > 0;
+            return branch.ValueRO.childsBuffer.Length > 0;
         }
     }
 }

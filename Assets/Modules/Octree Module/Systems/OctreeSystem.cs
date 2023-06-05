@@ -45,32 +45,31 @@ namespace OctreeModule
                 targetPosition = camera.transform.position;
             }
 
-            UpdateOctreeLeaves();
-            PruneOctreeLeaves();
-            UpdateOctreeBranches();
-        }
-
-        private void UpdateOctreeLeaves()
-        {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 
+            UpdateOctreeLeaves(ecb);
+            PruneOctreeLeaves(ecb);
+
+            Dependency.Complete();
+            ecb.Playback(EntityManager);
+            ecb.Dispose();
+        }
+
+        private void UpdateOctreeLeaves(EntityCommandBuffer ecb)
+        {
             Entities.ForEach((OctreeLeafAspect leaf) =>
             {
                 if (leaf.Depth > 0)
                 {
                     float distance = math.distance(targetPosition, leaf.Position);
-                    float lodDistance = leaf.LodDistance * leaf.Depth;
+                    int LOD = (int) math.trunc(distance / leaf.LodDistance);
 
-                    if (distance <= lodDistance)
+                    if (LOD < leaf.Depth)
                     {
                         SplitLeaf(leaf, ecb);
                     }
                 }
             }).WithoutBurst().Run();
-
-            Dependency.Complete();
-            ecb.Playback(EntityManager);
-            ecb.Dispose();
         }
 
     /// <summary>
@@ -80,7 +79,7 @@ namespace OctreeModule
     private void SplitLeaf(OctreeLeafAspect octreeNode, EntityCommandBuffer ecb) 
         {
             ecb.RemoveComponent<OctreeLeafComponent>(octreeNode.self);
-            
+
             DynamicBuffer<ChildsNodesBuffer> childBuffer = ecb.AddBuffer<ChildsNodesBuffer>(octreeNode.self);
             childBuffer.EnsureCapacity(childMap.Length);
 
@@ -116,69 +115,36 @@ namespace OctreeModule
 
                 childBuffer.Add(new ChildsNodesBuffer
                 {
-                    child = childEntity
+                    entity = childEntity
                 });
             }
+
+            ecb.AddComponent(octreeNode.self, new OctreeBranchComponent 
+            {
+                childsBuffer = childBuffer
+            });
         }
 
-        private void PruneOctreeLeaves() 
+        private void PruneOctreeLeaves(EntityCommandBuffer ecb) 
         {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
-
-            Entities.ForEach((OctreeLeafAspect leaf) =>
+            Entities.ForEach((OctreeNodeAspect node) =>
             {
-                OctreeNodeAspect parentNode = entityManager.GetAspect<OctreeNodeAspect>(leaf.Parent);
+                float distance = math.distance(targetPosition, node.Position);
+                int LOD = (int)math.trunc(distance / node.LodDistance);
 
-                if (!parentNode.IsRoot())
+                if (LOD > node.Depth)
                 {
-                    float distance = math.distance(targetPosition, parentNode.Position);
-                    float parentLodDistance = parentNode.LodDistance * parentNode.Depth;
+                    ecb.AddComponent<OctreeLeafComponent>(node.self);
 
-                    if (distance > parentLodDistance)
+                    foreach (ChildsNodesBuffer child in node.Childs) 
                     {
-                        CutLeaf(leaf, ecb);
+                        ecb.DestroyEntity(child.entity);
                     }
+
+                    ecb.RemoveComponent<OctreeBranchComponent>(node.self);
                 }
+
             }).WithoutBurst().Run();
-
-            Dependency.Complete();
-            ecb.Playback(EntityManager);
-            ecb.Dispose();
-        }
-
-        private void CutLeaf(OctreeLeafAspect leaf, EntityCommandBuffer ecb) 
-        {
-            DynamicBuffer<ChildsNodesBuffer> parentBuffer = entityManager.GetBuffer<ChildsNodesBuffer>(leaf.Parent);
-
-            int index = 0;
-            int target = 0;
-            foreach (ChildsNodesBuffer child in parentBuffer) 
-            {
-                if (child.child == leaf.self) 
-                {
-                    target = index;
-                }
-                index++;
-
-            }
-
-            parentBuffer.RemoveAt(target);
-
-            ecb.DestroyEntity(leaf.self);
-        }
-
-        private void UpdateOctreeBranches() 
-        {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
-
-            Entities.ForEach((OctreeNodeAspect leaf) =>
-            {
-               
-            }).WithoutBurst().Run();
-
-            Dependency.Complete();
-            ecb.Playback(EntityManager);
-            ecb.Dispose();
         }
     }
 }
