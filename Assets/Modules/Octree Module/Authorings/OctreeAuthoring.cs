@@ -53,7 +53,14 @@ namespace OctreeModule
 
     public struct OctreeBranchComponent : IComponentData
     {
-        public DynamicBuffer<ChildsNodesBuffer> childsBuffer;
+        public Entity child0;
+        public Entity child1;
+        public Entity child2;
+        public Entity child3;
+        public Entity child4;
+        public Entity child5;
+        public Entity child6;
+        public Entity child7;
     }
    
     public struct OctreeLeafComponent : IComponentData 

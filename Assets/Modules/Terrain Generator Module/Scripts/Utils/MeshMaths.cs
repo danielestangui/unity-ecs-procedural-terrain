@@ -67,5 +67,38 @@ namespace TerrainGenerator.Utils
                 (position.y == 0 || position.y == (resolution - 1)) ||
                 (position.z == 0 || position.z == (resolution - 1));
         }
+
+        public static bool IsInsideTheCube(float3 point, float3 cubeCenter, float cubeSideLength)
+        {
+            float halfSideLength = cubeSideLength / 2;
+
+            float minX = cubeCenter.x - halfSideLength;
+            float maxX = cubeCenter.x + halfSideLength;
+            float minY = cubeCenter.y - halfSideLength;
+            float maxY = cubeCenter.y + halfSideLength;
+            float minZ = cubeCenter.z - halfSideLength;
+            float maxZ = cubeCenter.z + halfSideLength;
+
+            return point.x >= minX && point.x <= maxX &&
+                   point.y >= minY && point.y <= maxY &&
+                   point.z >= minZ && point.z <= maxZ;
+        }
+
+        public static bool CheckSphereCubeCollision(Vector3 sphereCenter, float sphereRadius, Vector3 cubeCenter, float cubeSideLength)
+        {
+            float halfSideLength = cubeSideLength / 2;
+
+            float distanceX = Mathf.Abs(sphereCenter.x - cubeCenter.x);
+            float distanceY = Mathf.Abs(sphereCenter.y - cubeCenter.y);
+            float distanceZ = Mathf.Abs(sphereCenter.z - cubeCenter.z);
+
+            float collisionX = distanceX - halfSideLength;
+            float collisionY = distanceY - halfSideLength;
+            float collisionZ = distanceZ - halfSideLength;
+
+            return collisionX <= sphereRadius &&
+                   collisionY <= sphereRadius &&
+                   collisionZ <= sphereRadius;
+        }
     }
 }

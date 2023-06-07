@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 997431e3b9dc71f4e98e8e2286042878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 20
-  maxDepth: 2
+  size: 100
+  maxDepth: 3
   lodDistance: 5
 --- !u!4 &25080771
 Transform:

@@ -1,3 +1,4 @@
+using TerrainGenerator.Utils;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -38,7 +39,7 @@ namespace OctreeModule
 
         protected override void OnUpdate()
         {
-            Camera camera = Camera.current;
+            Camera camera = Camera.main;
    
             if (camera != null)
             {
@@ -48,7 +49,6 @@ namespace OctreeModule
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 
             UpdateOctreeLeaves(ecb);
-            PruneOctreeLeaves(ecb);
 
             Dependency.Complete();
             ecb.Playback(EntityManager);
@@ -61,10 +61,15 @@ namespace OctreeModule
             {
                 if (leaf.Depth > 0)
                 {
-                    float distance = math.distance(targetPosition, leaf.Position);
-                    int LOD = (int) math.trunc(distance / leaf.LodDistance);
+                    /* float distance = math.distance(targetPosition, leaf.Position);
+                     int LOD = (int) math.trunc(distance / leaf.LodDistance);
 
-                    if (LOD < leaf.Depth)
+                     if (LOD <= leaf.Depth)
+                     {
+                         SplitLeaf(leaf, ecb);
+                     }*/
+
+                    if (MeshMaths.CheckSphereCubeCollision(targetPosition,3,leaf.Position,leaf.Size)) 
                     {
                         SplitLeaf(leaf, ecb);
                     }
@@ -80,8 +85,7 @@ namespace OctreeModule
         {
             ecb.RemoveComponent<OctreeLeafComponent>(octreeNode.self);
 
-            DynamicBuffer<ChildsNodesBuffer> childBuffer = ecb.AddBuffer<ChildsNodesBuffer>(octreeNode.self);
-            childBuffer.EnsureCapacity(childMap.Length);
+            Entity[] childs = new Entity[8];
 
             float halfSize = octreeNode.Size * 0.5f;
             float quarterSize = halfSize * 0.5f;
@@ -113,38 +117,22 @@ namespace OctreeModule
                 ecb.AddComponent(childEntity, octreeNodeComponent);
                 ecb.AddComponent(childEntity, octreeLeafComponent);
 
-                childBuffer.Add(new ChildsNodesBuffer
-                {
-                    entity = childEntity
-                });
+                childs[childIndex] = childEntity;
             }
 
             ecb.AddComponent(octreeNode.self, new OctreeBranchComponent 
             {
-                childsBuffer = childBuffer
+                child0 = childs[0],
+                child1 = childs[1],
+                child2 = childs[2],
+                child3 = childs[3],
+                child4 = childs[4],
+                child5 = childs[5],
+                child6 = childs[6],
+                child7 = childs[7]
             });
-        }
 
-        private void PruneOctreeLeaves(EntityCommandBuffer ecb) 
-        {
-            Entities.ForEach((OctreeNodeAspect node) =>
-            {
-                float distance = math.distance(targetPosition, node.Position);
-                int LOD = (int)math.trunc(distance / node.LodDistance);
 
-                if (LOD > node.Depth)
-                {
-                    ecb.AddComponent<OctreeLeafComponent>(node.self);
-
-                    foreach (ChildsNodesBuffer child in node.Childs) 
-                    {
-                        ecb.DestroyEntity(child.entity);
-                    }
-
-                    ecb.RemoveComponent<OctreeBranchComponent>(node.self);
-                }
-
-            }).WithoutBurst().Run();
         }
     }
 }

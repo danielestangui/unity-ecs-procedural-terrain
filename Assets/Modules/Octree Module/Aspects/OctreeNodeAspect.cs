@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -12,7 +13,7 @@ namespace OctreeModule
         public readonly Entity self;
 
         private readonly RefRO<LocalTransform> transform;
-        private readonly RefRO<OctreeNodeComponent> node;
+        private readonly RefRW<OctreeNodeComponent> node;
         private readonly RefRW<OctreeBranchComponent> branch;
 
         public float3 Position
@@ -40,20 +41,41 @@ namespace OctreeModule
             get => node.ValueRO.parent;
         }
 
-        public DynamicBuffer<ChildsNodesBuffer> Childs
+        public Entity[] Childs
         {
-            get => branch.ValueRO.childsBuffer;
-            set => branch.ValueRW.childsBuffer = value;
+            get 
+            {
+                Entity[] childs =
+                {
+                    branch.ValueRO.child0,
+                    branch.ValueRO.child1,
+                    branch.ValueRO.child2,
+                    branch.ValueRO.child3,
+                    branch.ValueRO.child4,
+                    branch.ValueRO.child5,
+                    branch.ValueRO.child6,
+                    branch.ValueRO.child7
+                };
+
+                return childs;
+            }
+            set 
+            {
+                branch.ValueRW.child0 = value[0];
+                branch.ValueRW.child1 = value[1];
+                branch.ValueRW.child2 = value[2];
+                branch.ValueRW.child3 = value[3];
+                branch.ValueRW.child4 = value[4];
+                branch.ValueRW.child5 = value[5];
+                branch.ValueRW.child6 = value[6];
+                branch.ValueRW.child7 = value[7];
+
+            }
         }
 
         public bool IsRoot()
         {
             return node.ValueRO.parent == Entity.Null;
-        }
-
-        public bool HasChilds()
-        {
-            return branch.ValueRO.childsBuffer.Length > 0;
         }
     }
 }
