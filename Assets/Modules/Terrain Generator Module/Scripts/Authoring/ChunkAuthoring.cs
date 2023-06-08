@@ -36,15 +36,18 @@ namespace TerrainGenerator
                 {
                     resolution = authoring.resolution,
                     size = authoring.size,
-                    gridVertexNativeArray = new NativeArray<GridVertex>(vertexResolution, Allocator.Persistent),
-                    cellNativeArray = new NativeArray<Cell>(cellResolution, Allocator.Persistent),
+                    //gridVertexNativeArray = new NativeArray<GridVertex>(vertexResolution, Allocator.Persistent),
+                    //cellNativeArray = new NativeArray<CellElement>(cellResolution, Allocator.Persistent),
                 };
 
                 AddComponent(entity, chunkComponent);
 
+                AddBuffer<GridVertexElement>(entity);
+                AddBuffer<CellElement>(entity);
                 AddBuffer<VerticesBuffer>(entity);
                 AddBuffer<IntersectingEdgesBuffer>(entity);
                 AddBuffer<TrianglesBuffer>(entity);
+
             }
         }
     }
@@ -53,18 +56,19 @@ namespace TerrainGenerator
     {
         public int resolution;
         public float size;
-        public NativeArray<GridVertex> gridVertexNativeArray;
-        public NativeArray<Cell> cellNativeArray;
+        //public NativeArray<GridVertex> gridVertexNativeArray;
+        //public NativeArray<Cell> cellNativeArray;
     }
 
-    public struct GridVertex
+    public struct GridVertexElement : IBufferElementData
     {
         public int index;
         public float3 position;
         public float value;
     }
 
-    public struct Cell
+
+    public struct CellElement : IBufferElementData
     {
         /*
 
@@ -107,7 +111,7 @@ namespace TerrainGenerator
         public int index;
         public float3 position;
         public float3 normal;
-        public Cell cell;
+        public CellElement cell;
     }
 
     /// <summary>
@@ -135,9 +139,9 @@ namespace TerrainGenerator
         public int axis;
 
         // Shared cells between both vertex
-        public Cell sharedCells00;
-        public Cell sharedCells01;
-        public Cell sharedCells10;
-        public Cell sharedCells11;
+        public CellElement sharedCells00;
+        public CellElement sharedCells01;
+        public CellElement sharedCells10;
+        public CellElement sharedCells11;
     }
 }

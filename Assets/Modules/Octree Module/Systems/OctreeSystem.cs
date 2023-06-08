@@ -62,9 +62,7 @@ namespace OctreeModule
             {
                 if (leaf.Depth > 0)
                 {
-                    int currentLOD = OctreeUtils.GetCurrentLOD(targetPosition, leaf.Position, leaf.Size);
-
-                    if (leaf.Depth > currentLOD) 
+                    if (OctreeUtils.CheckActivationVolume(targetPosition, leaf.Position, leaf.Size)) 
                     {
                         SplitLeaf(leaf, ecb);
                     }
@@ -98,7 +96,6 @@ namespace OctreeModule
                     parent = octreeNode.self,
                     depth = octreeNode.Depth - 1,
                     size = halfSize,
-                    lodDistance = octreeNode.LodDistance - 1
                 };
 
                 OctreeLeafComponent octreeLeafComponent = new OctreeLeafComponent

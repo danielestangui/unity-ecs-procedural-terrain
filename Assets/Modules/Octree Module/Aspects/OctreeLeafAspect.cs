@@ -25,11 +25,6 @@ namespace OctreeModule
             get => node.ValueRO.size;
         }
 
-        public float LodDistance
-        {
-            get => node.ValueRO.lodDistance;
-        }
-
         public int Depth
         {
             get => node.ValueRO.depth;

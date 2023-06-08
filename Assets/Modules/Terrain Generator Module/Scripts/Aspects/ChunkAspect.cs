@@ -16,6 +16,8 @@ namespace TerrainGenerator
         private readonly RefRO<LocalTransform> transform;
         private readonly RefRW<ChunkComponent> chunk;
 
+        public readonly DynamicBuffer<GridVertexElement> gridVertexBuffer;
+        public readonly DynamicBuffer<CellElement> cellBuffer;
         public readonly DynamicBuffer<VerticesBuffer> verticesBuffer;
         public readonly DynamicBuffer<IntersectingEdgesBuffer> edgesBuffer;
         public readonly DynamicBuffer<TrianglesBuffer> triangleBuffer;
@@ -37,7 +39,7 @@ namespace TerrainGenerator
             get => chunk.ValueRO.size;
         }
 
-        public void GetVerticeFromCell(Cell cell, ref VerticeElement vertex) 
+        public void GetVerticeFromCell(CellElement cell, ref VerticeElement vertex) 
         {
             for (int i = 0; i < verticesBuffer.Length; i++)
             {
@@ -46,16 +48,36 @@ namespace TerrainGenerator
             }
         }
 
-        public GridVertex[] GridVertexArray 
+        public GridVertexElement[] GridVertexArray 
         {
-            get => chunk.ValueRO.gridVertexNativeArray.ToArray();
-            set => NativeArray<GridVertex>.Copy(value, chunk.ValueRW.gridVertexNativeArray, value.Length);
+            get  
+            {
+                return gridVertexBuffer.ToNativeArray(Allocator.Temp).ToArray();
+            }
+            set 
+            {
+                gridVertexBuffer.Clear();
+                foreach (GridVertexElement element in value) 
+                {
+                    gridVertexBuffer.Add(element);
+                }
+            } 
         }
 
-        public Cell[] CellArray 
+        public CellElement[] CellArray 
         {
-            get => chunk.ValueRO.cellNativeArray.ToArray();
-            set => NativeArray<Cell>.Copy(value, chunk.ValueRW.cellNativeArray, value.Length);
+            get
+            {
+                return cellBuffer.ToNativeArray(Allocator.Temp).ToArray();
+            }
+            set
+            {
+                gridVertexBuffer.Clear();
+                foreach (CellElement element in value)
+                {
+                    cellBuffer.Add(element);
+                }
+            }
         }
         #endregion
     }

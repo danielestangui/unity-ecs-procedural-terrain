@@ -15,9 +15,6 @@ namespace OctreeModule
         [SerializeField]
         private int maxDepth;
 
-        [SerializeField]
-        private float lodDistance;
-
         public class Baker : Baker<OctreeAuthoring>
         {
             public override void Bake(OctreeAuthoring authoring)
@@ -27,7 +24,6 @@ namespace OctreeModule
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
                     parent = Entity.Null,
-                    lodDistance = authoring.lodDistance,
                     size = authoring.size,
                     depth = authoring.maxDepth
                 };
@@ -45,7 +41,6 @@ namespace OctreeModule
 
     public struct OctreeNodeComponent : IComponentData
     {
-        public float lodDistance;
         public float size;
         public int depth;
         public Entity parent;

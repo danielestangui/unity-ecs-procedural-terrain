@@ -45,9 +45,9 @@ namespace TerrainGenerator
         /// <param name="resolution"> Number of grid vertex per chunk side </param>
         /// <param name="size"> Size of the chunk </param>
         /// <returns></returns>
-        private GridVertex[] GenerateGridVertexData(float3 position, int resolution, float size) 
+        private GridVertexElement[] GenerateGridVertexData(float3 position, int resolution, float size) 
         {
-            GridVertex[] gridVertexArray = new GridVertex[resolution * resolution * resolution];
+            GridVertexElement[] gridVertexArray = new GridVertexElement[resolution * resolution * resolution];
 
             float3 centerOfset = new float3(-1, -1, -1) * size / 2;
 
@@ -66,13 +66,13 @@ namespace TerrainGenerator
         /// </summary>
         /// <param name="resolution"> Number of grid vertex per chunk side </param>
         /// <returns></returns>
-        private Cell[] GenerateCellData(int resolution) 
+        private CellElement[] GenerateCellData(int resolution) 
         {
             int cellResolution = (resolution - 1);
             int cellArrayResolution = cellResolution * cellResolution * cellResolution;
             int resolution2 = resolution * resolution;
 
-            Cell[] cellArray = new Cell[cellArrayResolution];
+            CellElement[] cellArray = new CellElement[cellArrayResolution];
 
             int cellIndex = 0;
 

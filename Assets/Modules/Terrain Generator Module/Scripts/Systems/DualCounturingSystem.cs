@@ -81,8 +81,8 @@ namespace TerrainGenerator
             {
                 List<int> tri = new List<int>();
 
-                GridVertex gridVertex1 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0];
-                GridVertex gridVertex2 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1];
+                GridVertexElement gridVertex1 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0];
+                GridVertexElement gridVertex2 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1];
 
                 /*Debug.Log($"IsBound: " +
                     $"{chunk.edgesBuffer[i].edgeData.vertexIndex0}, {MeshMaths.VertexIsBorder(chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0], chunk.Resolution)}, " +

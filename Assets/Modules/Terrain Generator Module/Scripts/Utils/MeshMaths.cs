@@ -58,7 +58,7 @@ namespace TerrainGenerator.Utils
             return center;
         }
 
-        public static bool VertexIsBorder(GridVertex vertex, int resolution)
+        public static bool VertexIsBorder(GridVertexElement vertex, int resolution)
         {
             int3 position = IndexToPosition(vertex.index, resolution);
 

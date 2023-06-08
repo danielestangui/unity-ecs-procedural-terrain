@@ -12,11 +12,13 @@ namespace OctreeModule
     [UpdateAfter(typeof(OctreeSystem))]
     public partial class PruneOctreeSystem : SystemBase
     {
+        private EntityManager entityManager;
         private float3 targetPosition;
 
         protected override void OnCreate()
         {
             targetPosition = float3.zero;
+            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         protected override void OnUpdate()
@@ -41,20 +43,39 @@ namespace OctreeModule
         {
             Entities.ForEach((OctreeNodeAspect node) =>
             {
-                int currentLOD = OctreeUtils.GetCurrentLOD(targetPosition, node.Position, node.Size);
+                bool prune = true;
 
-                if (node.Depth <= currentLOD)
-                {
-                    ecb.AddComponent<OctreeLeafComponent>(node.self);
-
-                    foreach (Entity child in node.Childs)
+                foreach (Entity child in node.Childs)
+                {         
+                    if (entityManager.HasComponent<OctreeLeafComponent>(child))
                     {
-                        ecb.DestroyEntity(child);
-                    }
+                        OctreeLeafAspect childLeaf = entityManager.GetAspect<OctreeLeafAspect>(child);
 
-                    ecb.RemoveComponent<OctreeBranchComponent>(node.self);
+                        if (child != Entity.Null)
+                        {
+                            if (OctreeUtils.CheckActivationVolume(targetPosition, childLeaf.Position, childLeaf.Size))
+                            {
+                                prune = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        prune = false;
+                        continue;
+                    }
                 }
 
+                if (prune) 
+                {
+                    ecb.AddComponent<OctreeLeafComponent>(node.self);
+                    
+                    foreach (Entity child in node.Childs)
+                    {
+
+                        ecb.DestroyEntity(child);
+                    }
+                }
             }).WithoutBurst().Run();
         }
     }

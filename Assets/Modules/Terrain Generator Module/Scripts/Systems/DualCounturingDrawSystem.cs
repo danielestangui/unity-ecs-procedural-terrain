@@ -81,8 +81,8 @@ namespace TerrainGenerator
             {
                 IntersectingEdgesElement edge = chunk.edgesBuffer[i].edgeData;
 
-                GridVertex gridVertex1 = chunk.GridVertexArray[edge.vertexIndex0];
-                GridVertex gridVertex2 = chunk.GridVertexArray[edge.vertexIndex1];
+                GridVertexElement gridVertex1 = chunk.GridVertexArray[edge.vertexIndex0];
+                GridVertexElement gridVertex2 = chunk.GridVertexArray[edge.vertexIndex1];
 
                 bool isBorder = MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution);
 

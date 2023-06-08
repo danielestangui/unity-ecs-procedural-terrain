@@ -47,10 +47,8 @@ namespace OctreeModule
             int leafCount = 0;
             foreach (var leaf in SystemAPI.Query<OctreeLeafAspect>())
             {
-                leafCount++;
-
-
                 Draw.DrawCube(leaf.Position,leaf.Size, OctreeUtils.GetColor(0));
+                leafCount++;
             }
 
             int branchNode = 0;
@@ -60,8 +58,8 @@ namespace OctreeModule
                 //Draw.DrawCube(branch.Position, branch.Size, OctreeUtils.GetColor(branch.Depth));
             }
 
-            Debug.Log($"Leaf Count:{leafCount}");
-            Debug.Log($"Branch Count:{branchNode}");
+            //Debug.Log($"Leaf Count:{leafCount}");
+            //Debug.Log($"Branch Count:{branchNode}");
         }
     }
 }

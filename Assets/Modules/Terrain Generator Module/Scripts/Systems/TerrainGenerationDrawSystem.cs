@@ -74,7 +74,7 @@ namespace TerrainGenerator
         /// </summary>
         /// <param name="gridVertexArray"></param>
         /// <param name="gizmoSphereRadius"></param>
-        private void DrawCorners(GridVertex[] gridVertexArray, float gizmoSphereRadius)
+        private void DrawCorners(GridVertexElement[] gridVertexArray, float gizmoSphereRadius)
         {
 
             for (int i = 0; i < gridVertexArray.Length; i++)
@@ -87,7 +87,7 @@ namespace TerrainGenerator
             }
         }
 
-        private void DrawCells(GridVertex[] gridVertex, Cell[] cells, bool cellWithVertice = false)
+        private void DrawCells(GridVertexElement[] gridVertex, CellElement[] cells, bool cellWithVertice = false)
         {
             for (int cellIndex = 0; cellIndex < cells.Length; cellIndex++)
             {

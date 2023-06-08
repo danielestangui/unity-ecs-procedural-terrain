@@ -40,7 +40,7 @@ namespace TerrainGenerator
         new Vector3( 1, 1, 1 ),
         };
 
-        public static VerticeElement CalculatePoint(int cellIndex, int vertexIndex, GridVertex[] gridVertex, Cell[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
+        public static VerticeElement CalculatePoint(int cellIndex, int vertexIndex, GridVertexElement[] gridVertex, CellElement[] cells, int resolution, ref List<IntersectingEdgesElement> edges)
         {
             int corners = 0;
             int[] cornersArray = 
@@ -115,7 +115,7 @@ namespace TerrainGenerator
 
                 // Calcualate Edge
 
-                Cell[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c2],cells, gridVertex, resolution);
+                CellElement[] surrondingCells = GetSurrondingCells(cornersArray[c1], cornersArray[c2],cells, gridVertex, resolution);
 
                 IntersectingEdgesElement edge = new IntersectingEdgesElement
                 {
@@ -194,10 +194,10 @@ namespace TerrainGenerator
             return  (float3) new Vector3(dx, dy, dz).normalized;
         }
 
-        private static Cell[] GetSurrondingCells(int index0, int index1 ,Cell[] cells, GridVertex[] gridVertex, int resolution) 
+        private static CellElement[] GetSurrondingCells(int index0, int index1 ,CellElement[] cells, GridVertexElement[] gridVertex, int resolution) 
         {
 
-            Cell[] surrondigCells = new Cell[4];
+            CellElement[] surrondigCells = new CellElement[4];
 
             int surrondigCellsCount = 0;
 
@@ -214,7 +214,7 @@ namespace TerrainGenerator
             return surrondigCells;
         }
 
-        private static bool CellContainsVecrtiece(int vertice,  Cell  cell) 
+        private static bool CellContainsVecrtiece(int vertice,  CellElement  cell) 
         {
             bool control = false;
 
@@ -230,7 +230,7 @@ namespace TerrainGenerator
             return control;
         }
 
-        private static int GetAxis(int v1, int v2, int resolution, GridVertex[] gridVertex) 
+        private static int GetAxis(int v1, int v2, int resolution, GridVertexElement[] gridVertex) 
         {
             int diference = Math.Abs(v2 - v1);
 
