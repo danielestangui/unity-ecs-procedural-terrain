@@ -55,21 +55,16 @@ namespace OctreeModule
             ecb.Dispose();
         }
 
+
         private void UpdateOctreeLeaves(EntityCommandBuffer ecb)
         {
             Entities.ForEach((OctreeLeafAspect leaf) =>
             {
                 if (leaf.Depth > 0)
                 {
-                    /* float distance = math.distance(targetPosition, leaf.Position);
-                     int LOD = (int) math.trunc(distance / leaf.LodDistance);
+                    int currentLOD = OctreeUtils.GetCurrentLOD(targetPosition, leaf.Position, leaf.Size);
 
-                     if (LOD <= leaf.Depth)
-                     {
-                         SplitLeaf(leaf, ecb);
-                     }*/
-
-                    if (MeshMaths.CheckSphereCubeCollision(targetPosition,3,leaf.Position,leaf.Size)) 
+                    if (leaf.Depth > currentLOD) 
                     {
                         SplitLeaf(leaf, ecb);
                     }

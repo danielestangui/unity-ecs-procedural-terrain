@@ -41,15 +41,13 @@ namespace OctreeModule
         {
             Entities.ForEach((OctreeNodeAspect node) =>
             {
-                //float distance = math.distance(targetPosition, node.Position);
-                //int LOD = (int)math.trunc(distance / node.LodDistance);
+                int currentLOD = OctreeUtils.GetCurrentLOD(targetPosition, node.Position, node.Size);
 
-                if (!MeshMaths.CheckSphereCubeCollision(targetPosition, 3, node.Position, node.Size))
-                //if (LOD > node.Depth)
+                if (node.Depth <= currentLOD)
                 {
                     ecb.AddComponent<OctreeLeafComponent>(node.self);
 
-                    foreach (Entity child in node.Childs) 
+                    foreach (Entity child in node.Childs)
                     {
                         ecb.DestroyEntity(child);
                     }
