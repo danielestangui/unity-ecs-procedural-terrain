@@ -16,13 +16,6 @@ namespace TerrainGenerator
         [SerializeField, Range(1, 10)]
         private float size;
 
-        [Header("Noise Settings")]
-        [SerializeField]
-        private float frequency;
-
-        [SerializeField, Range(0, 1)]
-        private float threshold;
-
         class Baker : Baker<ChunkAuthoring>
         {
             public override void Bake(ChunkAuthoring authoring)

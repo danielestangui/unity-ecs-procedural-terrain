@@ -72,7 +72,7 @@ namespace TerrainGenerator
             }
             set
             {
-                gridVertexBuffer.Clear();
+                cellBuffer.Clear();
                 foreach (CellElement element in value)
                 {
                     cellBuffer.Add(element);
