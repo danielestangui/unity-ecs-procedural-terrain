@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace OctreeModule
+namespace TerrainGenerator
 {
     readonly partial struct OctreeNodeAspect : IAspect
     {

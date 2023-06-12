@@ -6,7 +6,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace OctreeModule
+namespace TerrainGenerator
 {
     [UpdateInGroup(typeof(OctreeSystemGroup))]
     [UpdateAfter(typeof(PruneOctreeSystem))]

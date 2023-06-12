@@ -4,12 +4,14 @@ using TerrainGenerator.Utils;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace OctreeModule 
+namespace TerrainGenerator 
 {
     public static class OctreeUtils
     {
 
         public static float activationRadious = 3f;
+
+        public static int[] depthResolution;
 
         public static Color[] depthColorArray = 
             {

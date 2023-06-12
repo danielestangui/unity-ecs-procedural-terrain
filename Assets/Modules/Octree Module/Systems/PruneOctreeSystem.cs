@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TerrainGenerator;
 using TerrainGenerator.Utils;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace OctreeModule 
+namespace TerrainGenerator 
 {
     [UpdateInGroup(typeof(OctreeSystemGroup), OrderFirst = true)]
     [UpdateAfter(typeof(OctreeSystem))]
@@ -69,7 +70,21 @@ namespace OctreeModule
                 if (prune) 
                 {
                     ecb.AddComponent<OctreeLeafComponent>(node.self);
-                    
+
+                    //DualContoiring
+                    var chunkComponent = new ChunkComponent
+                    {
+                        resolution = OctreeUtils.depthResolution[node.Depth],
+                        size = node.Size,
+                    };
+
+                    ecb.AddComponent(node.self, chunkComponent);
+                    ecb.AddBuffer<GridVertexElement>(node.self);
+                    ecb.AddBuffer<CellElement>(node.self);
+                    ecb.AddBuffer<VerticesBuffer>(node.self);
+                    ecb.AddBuffer<IntersectingEdgesBuffer>(node.self);
+                    ecb.AddBuffer<TrianglesBuffer>(node.self);
+
                     foreach (Entity child in node.Childs)
                     {
 

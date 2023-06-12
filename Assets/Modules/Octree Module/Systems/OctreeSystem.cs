@@ -1,3 +1,4 @@
+using TerrainGenerator;
 using TerrainGenerator.Utils;
 using Unity.Burst;
 using Unity.Collections;
@@ -6,7 +7,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace OctreeModule
+namespace TerrainGenerator
 {
     public partial class OctreeSystemGroup : ComponentSystemGroup
     {
@@ -108,6 +109,20 @@ namespace OctreeModule
                 ecb.AddComponent(childEntity, transform);
                 ecb.AddComponent(childEntity, octreeNodeComponent);
                 ecb.AddComponent(childEntity, octreeLeafComponent);
+
+                //DualContoiring
+                var chunkComponent = new ChunkComponent
+                {
+                    resolution = OctreeUtils.depthResolution[octreeNodeComponent.depth],
+                    size = halfSize,
+                };
+
+                ecb.AddComponent(childEntity, chunkComponent);
+                ecb.AddBuffer<GridVertexElement>(childEntity);
+                ecb.AddBuffer<CellElement>(childEntity);
+                ecb.AddBuffer<VerticesBuffer>(childEntity);
+                ecb.AddBuffer<IntersectingEdgesBuffer>(childEntity);
+                ecb.AddBuffer<TrianglesBuffer>(childEntity);
 
                 childs[childIndex] = childEntity;
             }

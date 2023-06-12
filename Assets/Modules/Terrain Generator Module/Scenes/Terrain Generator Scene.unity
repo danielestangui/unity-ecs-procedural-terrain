@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 1242416576}
   - component: {fileID: 1242416575}
   m_Layer: 0
-  m_Name: Draw Manager
+  m_Name: Terrain Generator Render Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
