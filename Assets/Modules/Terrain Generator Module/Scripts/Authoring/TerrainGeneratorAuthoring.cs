@@ -34,6 +34,11 @@ namespace TerrainGenerator
                 AddComponent(entity, componentsToAdd);
 
                 // Set Components
+                LocalTransform localTransform = new LocalTransform
+                {
+                    Position = GetComponent<Transform>().position
+                };
+
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
                     parent = Entity.Null,
@@ -41,12 +46,13 @@ namespace TerrainGenerator
                     depth = (authoring.data.depthResolution.Length - 1)
                 };
 
-                var chunkComponent = new ChunkComponent
+                ChunkComponent chunkComponent = new ChunkComponent
                 {
                     resolution = authoring.data.depthResolution[octreeNodeComponent.depth],
                     size = authoring.data.size,
                 };
 
+                SetComponent(entity, localTransform);
                 SetComponent(entity, octreeNodeComponent);
                 SetComponent(entity, chunkComponent);
 

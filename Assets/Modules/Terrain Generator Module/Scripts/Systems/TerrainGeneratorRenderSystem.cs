@@ -32,10 +32,15 @@ namespace TerrainGenerator
 
             Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
 
-            if (singletonRenderEnitity != Entity.Null) 
+            if (singletonRenderEnitity == Entity.Null) 
             {
-                //UpdateTargtPosition(state.GetComponentDataFromEntity<TerrainGeneratorRenderComponent>(false));
-                Debug.Log("Draw");
+                return;
+            }
+
+            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<ChunkComponent>>())
+            {
+                Debug.Log("Hola");
+                DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
             }
         }
 

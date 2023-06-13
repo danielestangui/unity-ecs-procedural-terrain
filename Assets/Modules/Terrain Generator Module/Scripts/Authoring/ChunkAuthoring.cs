@@ -25,7 +25,7 @@ namespace TerrainGenerator
 
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                var chunkComponent = new ChunkComponent
+                ChunkComponent chunkComponent = new ChunkComponent
                 {
                     resolution = authoring.resolution,
                     size = authoring.size,
