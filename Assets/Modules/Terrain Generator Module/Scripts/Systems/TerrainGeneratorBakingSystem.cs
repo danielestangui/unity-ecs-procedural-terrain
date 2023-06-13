@@ -27,7 +27,7 @@ namespace TerrainGenerator
         public void OnUpdate(ref SystemState state)
         {
             Debug.Log($"[{this.ToString()}]OnUpdate");
-            UpdateTargetPosition();
+            //UpdateTargetPosition();
         }
 
         private void UpdateTargetPosition() 

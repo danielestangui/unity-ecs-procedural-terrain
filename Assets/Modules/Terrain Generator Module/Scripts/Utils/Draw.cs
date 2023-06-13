@@ -4,15 +4,16 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using System;
+using Shapes;
 
 namespace TerrainGenerator.Utils
 {
-    public static class Draw
+    public static class DrawHelper
     {
+        public static bool dirtyFlag = false;
         private static ArrayList onDrawGizmoActions = new ArrayList();
 
         private enum Plane { XZ, XY, YZ }
-
 
         public static void DrawCube(float3 center, float side, Color color) 
         {
@@ -30,20 +31,30 @@ namespace TerrainGenerator.Utils
                center + new float3(-1,1,1) * halfside
             };
 
-            Debug.DrawLine(cornners[0], cornners[1], color);
-            Debug.DrawLine(cornners[1], cornners[2], color);
-            Debug.DrawLine(cornners[2], cornners[3], color);
-            Debug.DrawLine(cornners[3], cornners[0], color);
+            onDrawGizmoActions.Add(new Action(() =>
+                {
+                    Draw.Thickness = 4;
+                    Draw.ThicknessSpace = ThicknessSpace.Pixels;
+                    Draw.LineGeometry = LineGeometry.Volumetric3D;
 
-            Debug.DrawLine(cornners[4], cornners[5], color);
-            Debug.DrawLine(cornners[5], cornners[6], color);
-            Debug.DrawLine(cornners[6], cornners[7], color);
-            Debug.DrawLine(cornners[7], cornners[4], color);
+                    Draw.Line(cornners[0], cornners[1], color);
+                    Draw.Line(cornners[1], cornners[2], color);
+                    Draw.Line(cornners[2], cornners[3], color);
+                    Draw.Line(cornners[3], cornners[0], color);
 
-            Debug.DrawLine(cornners[0], cornners[4], color);
-            Debug.DrawLine(cornners[1], cornners[5], color);
-            Debug.DrawLine(cornners[2], cornners[6], color);
-            Debug.DrawLine(cornners[3], cornners[7], color);
+                    Draw.Line(cornners[4], cornners[5], color);
+                    Draw.Line(cornners[5], cornners[6], color);
+                    Draw.Line(cornners[6], cornners[7], color);
+                    Draw.Line(cornners[7], cornners[4], color);
+
+                    Draw.Line(cornners[0], cornners[4], color);
+                    Draw.Line(cornners[1], cornners[5], color);
+                    Draw.Line(cornners[2], cornners[6], color);
+                    Draw.Line(cornners[3], cornners[7], color);
+
+                }));
+
+            dirtyFlag = true;
         }
 
         private static void DrawCircle(float3 center, float radius, Color color, Plane plane = Plane.XZ)
@@ -91,8 +102,13 @@ namespace TerrainGenerator.Utils
 
         public static void DrawSphere(float3 position, float radius, Color color) 
         {
-            onDrawGizmoActions.Add(new Action(() => Gizmos.color = color));
-            onDrawGizmoActions.Add(new Action(() => Gizmos.DrawSphere(position,radius)));
+            //onDrawGizmoActions.Add(new Action(() => Gizmos.color = color));
+            //onDrawGizmoActions.Add(new Action(() => Gizmos.DrawSphere(position,radius)));
+
+            onDrawGizmoActions.Add(new Action(() => 
+            {
+                Draw.Sphere(position, radius, color);
+            }));
         }
 
         public static void DrawCircleSphere(float3 position, float radius, Color color)

@@ -10,10 +10,11 @@ using UnityEngine;
 namespace TerrainGenerator 
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
     public partial struct TerrainGeneratorRenderSystem : ISystem
     {
         private EntityQuery singletonRenderQuery;
-
+        private EntityManager entityManager;
         private float3 targetPosition;
 
         [BurstCompile]
@@ -22,6 +23,7 @@ namespace TerrainGenerator
             Debug.Log($"[{this.ToString()}]OnCreate");
 
             state.RequireForUpdate<TerrainGeneratorRenderComponent>();
+            EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             singletonRenderQuery = state.GetEntityQuery(typeof(TerrainGeneratorRenderComponent));
         }
 
@@ -29,6 +31,9 @@ namespace TerrainGenerator
         public void OnUpdate(ref SystemState state)
         {
             Debug.Log($"[{this.ToString()}]OnUpdate");
+            
+            // Esta acción se tiene que cuando empieza el ciclo de SystenRender para que se vean bien las shapes
+            DrawHelper.ClearOnDrawGizmoActions();
 
             Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
 
@@ -37,9 +42,8 @@ namespace TerrainGenerator
                 return;
             }
 
-            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<ChunkComponent>>())
+            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalToWorld>, RefRO<ChunkComponent>>())
             {
-                Debug.Log("Hola");
                 DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
             }
         }
@@ -56,7 +60,7 @@ namespace TerrainGenerator
         /// <param name="size"> Size of the chunk </param>
         private void DrawBounds(float3 position, float size)
         {
-            Draw.DrawCube(position, size, Color.yellow);
+            DrawHelper.DrawCube(position, size, Color.yellow);
         }
     }
 }

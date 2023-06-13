@@ -17,6 +17,7 @@ namespace TerrainGenerator
             static ComponentTypeSet componentsToAdd = new(new ComponentType[]
            {
                 typeof(LocalTransform),
+                typeof(LocalToWorld),
                 typeof(OctreeNodeComponent),
                 typeof(ChunkComponent)
            });
@@ -34,11 +35,6 @@ namespace TerrainGenerator
                 AddComponent(entity, componentsToAdd);
 
                 // Set Components
-                LocalTransform localTransform = new LocalTransform
-                {
-                    Position = GetComponent<Transform>().position
-                };
-
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
                     parent = Entity.Null,
@@ -52,7 +48,9 @@ namespace TerrainGenerator
                     size = authoring.data.size,
                 };
 
-                SetComponent(entity, localTransform);
+                Transform transform = GetComponent<Transform>();
+
+                SetComponent(entity, LocalTransform.FromPosition(transform.position));
                 SetComponent(entity, octreeNodeComponent);
                 SetComponent(entity, chunkComponent);
 

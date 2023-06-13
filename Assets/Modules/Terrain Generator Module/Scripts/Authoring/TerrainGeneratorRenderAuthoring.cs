@@ -33,6 +33,7 @@ namespace TerrainGenerator
                 // Set Components
                 TerrainGeneratorRenderComponent terrainGeneratorRenderComponent = new TerrainGeneratorRenderComponent
                 {
+                    showTerrainGeneratorBoundingBox = authoring.data.showTerrainGeneratorBoundingBox,
                     LODPointOfView = authoring.data.LODPointOfView
                 };
 
@@ -43,6 +44,7 @@ namespace TerrainGenerator
     }
     public struct TerrainGeneratorRenderComponent : IComponentData
     {
+        public bool showTerrainGeneratorBoundingBox;
         public LODPointOfView LODPointOfView;
     }
 }

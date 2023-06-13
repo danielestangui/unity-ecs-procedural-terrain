@@ -62,7 +62,7 @@ namespace TerrainGenerator
             {
                 VerticeElement vertice = chunk.verticesBuffer[i].vertice;
 
-                Draw.DrawSphere(vertice.position, vertexRadius, vertexColor);
+                DrawHelper.DrawSphere(vertice.position, vertexRadius, vertexColor);
 
 #if DEBUG_DualContouring__DrawVertex_Index
                 float3 vertexIndexOffset = new float3(1, 1, 0) * vertexRadius;
@@ -86,7 +86,7 @@ namespace TerrainGenerator
 
                 bool isBorder = MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution);
 
-                Draw.DrawLine(gridVertex1.position, gridVertex2.position, (isBorder) ? intersectingEdgeIsBorderColor : intersectingEdgeColor);
+                DrawHelper.DrawLine(gridVertex1.position, gridVertex2.position, (isBorder) ? intersectingEdgeIsBorderColor : intersectingEdgeColor);
 
                 string edgeInfoMsg = "";
 
@@ -125,7 +125,7 @@ namespace TerrainGenerator
                 }
 #endif
                 if (!string.IsNullOrEmpty(edgeInfoMsg))
-                    Draw.DrawText(position + intersectingEdgesOffset, edgeInfoMsg);
+                    DrawHelper.DrawText(position + intersectingEdgesOffset, edgeInfoMsg);
             }
         }
     }

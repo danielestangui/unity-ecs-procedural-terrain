@@ -66,7 +66,7 @@ namespace TerrainGenerator
         /// <param name="size"> Size of the chunk </param>
         private void DrawBounds(float3 position, float size)
         {
-            Draw.DrawCube(position, size, Color.yellow);
+            DrawHelper.DrawCube(position, size, Color.yellow);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace TerrainGenerator
 
             for (int i = 0; i < gridVertexArray.Length; i++)
             {
-                Draw.DrawSphere(gridVertexArray[i].position, gizmoSphereRadius, gridVertexArray[i].value < 0 ? Color.white : Color.black);
+                DrawHelper.DrawSphere(gridVertexArray[i].position, gizmoSphereRadius, gridVertexArray[i].value < 0 ? Color.white : Color.black);
 #if DEBUG_TerrainGenerator__GridVertexIndex
                 float3 gridVertexIndexOffset = new float3(1, 1, 0) * gizmoSphereRadius;
                 Draw.DrawText(gridVertexArray[i].position + gridVertexIndexOffset, i.ToString());
@@ -127,7 +127,7 @@ namespace TerrainGenerator
                 float side = Vector3.Distance(gridVertex[cells[cellIndex].corner0].position, gridVertex[cells[cellIndex].corner1].position);
                 float3 center = MeshMaths.GetCenterOfCube(corners);
 
-                Draw.DrawCube(center, side, Color.green);
+                DrawHelper.DrawCube(center, side, Color.green);
 
 #if DEBUG_TerrainGenerator__DrawCellIndex
                 Draw.DrawText(center, $"[{cellIndex}]");

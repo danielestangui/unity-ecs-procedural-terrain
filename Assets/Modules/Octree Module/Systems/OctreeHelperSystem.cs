@@ -47,7 +47,7 @@ namespace TerrainGenerator
             int leafCount = 0;
             foreach (var leaf in SystemAPI.Query<OctreeLeafAspect>())
             {
-                Draw.DrawCube(leaf.Position,leaf.Size, OctreeUtils.GetColor(0));
+                DrawHelper.DrawCube(leaf.Position,leaf.Size, OctreeUtils.GetColor(0));
                 leafCount++;
             }
 

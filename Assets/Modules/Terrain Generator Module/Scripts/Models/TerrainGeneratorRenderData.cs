@@ -13,6 +13,7 @@ namespace TerrainGenerator
     [CreateAssetMenu(menuName = "Terrain Generator/Terrain Generator Render Data")]
     public class TerrainGeneratorRenderData : ScriptableObject
     {
+        public bool showTerrainGeneratorBoundingBox;
         public LODPointOfView LODPointOfView;
     }
 }

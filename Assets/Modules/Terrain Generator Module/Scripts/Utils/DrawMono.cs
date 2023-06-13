@@ -2,25 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using Shapes;
 
 namespace TerrainGenerator.Utils 
 {
-    public class DrawMono : MonoBehaviour
+    [ExecuteAlways]
+    public class DrawMono : ImmediateModeShapeDrawer
     {
-        private void OnDrawGizmos()
+        public override void DrawShapes(Camera cam)
         {
-            if (Application.isPlaying) 
+            using (Draw.Command(cam))
             {
-
-                foreach (Action action in Draw.GetOnDrawGizmoActions())
+                foreach (Action action in DrawHelper.GetOnDrawGizmoActions())
                 {
                     action();
                 }
-
-                Draw.ClearOnDrawGizmoActions();
             }
-
-        }
+        }     
     }
 }

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f7998cb61c82e4eaf1cc370d5a9b10, type: 3}
   m_Name: Terrain Generator Render Data
   m_EditorClassIdentifier: 
+  showTerrainGeneratorBoundingBox: 1
   LODPointOfView: 0
