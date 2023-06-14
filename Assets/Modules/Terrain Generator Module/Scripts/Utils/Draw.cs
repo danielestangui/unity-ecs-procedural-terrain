@@ -33,7 +33,7 @@ namespace TerrainGenerator.Utils
 
             onDrawGizmoActions.Add(new Action(() =>
                 {
-                    Draw.Thickness = 4;
+                    Draw.Thickness = 2;
                     Draw.ThicknessSpace = ThicknessSpace.Pixels;
                     Draw.LineGeometry = LineGeometry.Volumetric3D;
 

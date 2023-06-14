@@ -14,7 +14,7 @@ namespace TerrainGenerator
     public partial struct TerrainGeneratorRenderSystem : ISystem
     {
         private EntityQuery singletonRenderQuery;
-        private EntityManager entityManager;
+
         private float3 targetPosition;
 
         [BurstCompile]
@@ -23,7 +23,7 @@ namespace TerrainGenerator
             Debug.Log($"[{this.ToString()}]OnCreate");
 
             state.RequireForUpdate<TerrainGeneratorRenderComponent>();
-            EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
             singletonRenderQuery = state.GetEntityQuery(typeof(TerrainGeneratorRenderComponent));
         }
 
@@ -31,11 +31,17 @@ namespace TerrainGenerator
         public void OnUpdate(ref SystemState state)
         {
             Debug.Log($"[{this.ToString()}]OnUpdate");
-            
+            // GetSingleton
+            Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
+            TerrainGeneratorRenderComponent renderComponent = state.GetComponentLookup<TerrainGeneratorRenderComponent>(true)[singletonRenderEnitity];
+
+            if (!UpdateTargtPosition(renderComponent)) 
+            {
+                return;
+            }
+
             // Esta acción se tiene que cuando empieza el ciclo de SystenRender para que se vean bien las shapes
             DrawHelper.ClearOnDrawGizmoActions();
-
-            Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
 
             if (singletonRenderEnitity == Entity.Null) 
             {
@@ -44,13 +50,36 @@ namespace TerrainGenerator
 
             foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalToWorld>, RefRO<ChunkComponent>>())
             {
-                DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
+                if (renderComponent.showTerrainGeneratorBoundingBox) 
+                {
+                    DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
+                }
             }
         }
 
-        private void UpdateTargtPosition(TerrainGeneratorRenderComponent renderComponent) 
+        private bool UpdateTargtPosition(TerrainGeneratorRenderComponent renderComponent) 
         {
-            
+            string msg = "";
+            Camera camera;
+
+            switch (renderComponent.LODPointOfView) 
+            {
+                case LODPointOfView.MainCamera:
+                    msg += "CamaraMain";
+                    camera = Camera.main;
+                    break;
+                default:
+                    msg += "CurrentCamera";
+                    camera = Camera.current;
+                    break;
+            }
+
+            if (camera) 
+            {
+                targetPosition = camera.transform.position;
+            }
+
+            return camera != null;
         }
 
         /// <summary>
