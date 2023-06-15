@@ -20,17 +20,12 @@ namespace TerrainGenerator
         {
             public override void Bake(ChunkAuthoring authoring)
             {
-                int vertexResolution = authoring.resolution * authoring.resolution * authoring.resolution;
-                int cellResolution = (authoring.resolution - 1) * (authoring.resolution - 1) * (authoring.resolution - 1);
-
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 ChunkComponent chunkComponent = new ChunkComponent
                 {
                     resolution = authoring.resolution,
                     size = authoring.size,
-                    //gridVertexNativeArray = new NativeArray<GridVertex>(vertexResolution, Allocator.Persistent),
-                    //cellNativeArray = new NativeArray<CellElement>(cellResolution, Allocator.Persistent),
                 };
 
                 AddComponent(entity, chunkComponent);
@@ -49,6 +44,7 @@ namespace TerrainGenerator
     {
         public int resolution;
         public float size;
+        public int depth;
         //public NativeArray<GridVertex> gridVertexNativeArray;
         //public NativeArray<Cell> cellNativeArray;
     }

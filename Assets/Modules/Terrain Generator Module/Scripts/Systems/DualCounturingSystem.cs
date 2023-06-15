@@ -11,14 +11,14 @@ using UnityEditor.Animations;
 
 namespace TerrainGenerator
 {
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(TerrainGeneratorSystem))]
+    [UpdateAfter(typeof(PruneOctreeSystem))]
     public partial struct DualCounturingSystem : ISystem
     {
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
-        {
+        {        
         }
 
         [BurstCompile]

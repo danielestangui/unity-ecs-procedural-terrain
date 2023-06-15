@@ -12,25 +12,27 @@ namespace TerrainGenerator
         [SerializeField]
         private TerrainGeneratorData data;
 
-        public class Baker : Baker<TerrainGeneratorAuthoring>
+        class Baker : Baker<TerrainGeneratorAuthoring>
         {
             static ComponentTypeSet componentsToAdd = new(new ComponentType[]
-           {
+            {
                 typeof(LocalTransform),
                 typeof(LocalToWorld),
                 typeof(OctreeNodeComponent),
-                typeof(ChunkComponent)
-           });
+                typeof(ChunkComponent),
+                typeof(OctreeLeafComponent)
+            });
 
             public override void Bake(TerrainGeneratorAuthoring authoring)
             {
                 // Baking dependencies
                 DependsOn(authoring.data);
 
-                if (authoring.data == null) return;
+                if (authoring.data == null) 
+                    return;
 
                 // Add Components
-                Entity entity = GetEntity(TransformUsageFlags.None);
+                Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent(entity, componentsToAdd);
 
@@ -48,11 +50,17 @@ namespace TerrainGenerator
                     size = authoring.data.size,
                 };
 
+                OctreeLeafComponent octreeLeafComponent = new OctreeLeafComponent
+                {
+                    value = 0
+                };
+
                 Transform transform = GetComponent<Transform>();
 
                 SetComponent(entity, LocalTransform.FromPosition(transform.position));
                 SetComponent(entity, octreeNodeComponent);
                 SetComponent(entity, chunkComponent);
+                SetComponent(entity, octreeLeafComponent);
 
                 // Add Buffers
                 AddBuffer<GridVertexElement>(entity);

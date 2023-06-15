@@ -13,4 +13,3 @@ MonoBehaviour:
   m_Name: Terrain Generator Render Data
   m_EditorClassIdentifier: 
   showTerrainGeneratorBoundingBox: 1
-  LODPointOfView: 0

@@ -9,7 +9,8 @@ using UnityEngine;
 
 namespace TerrainGenerator 
 {
-    [UpdateInGroup(typeof(OctreeSystemGroup), OrderFirst = true)]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
     [UpdateAfter(typeof(OctreeSystem))]
     public partial class PruneOctreeSystem : SystemBase
     {
@@ -18,18 +19,14 @@ namespace TerrainGenerator
 
         protected override void OnCreate()
         {
+            Enabled = false;
             targetPosition = float3.zero;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         protected override void OnUpdate()
         {
-            Camera camera = Camera.main;
-
-            if (camera != null)
-            {
-                targetPosition = camera.transform.position;
-            }
+            targetPosition = OctreeLOD.GetTargetPosition();
 
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 
@@ -50,7 +47,7 @@ namespace TerrainGenerator
                 {         
                     if (entityManager.HasComponent<OctreeLeafComponent>(child))
                     {
-                        OctreeLeafAspect childLeaf = entityManager.GetAspect<OctreeLeafAspect>(child);
+                        OctreeLeafAspect childLeaf = SystemAPI.GetAspect<OctreeLeafAspect>(child);
 
                         if (child != Entity.Null)
                         {

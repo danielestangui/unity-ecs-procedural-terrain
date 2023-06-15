@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b67f70b297b9794aad8108c1f7f0ce6, type: 3}
   m_Name: Terrain Generator Data
   m_EditorClassIdentifier: 
-  size: 58
-  depthResolution: 090000001a000000
+  size: 190
+  depthResolution: 160000001a000000

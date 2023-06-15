@@ -71,25 +71,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGeneratorSystem.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\MarchingCubeLookUpTable.cs" />
     <Compile Include="Assets\Modules\Utils\Common\Scripts\UtilsServerLocator.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Dual Contouring\DualContouring.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGenerationDrawSystem.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Mono\GenerateMesh.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\QefData.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Systems\PruneOctreeSystem.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeDrawInfo.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGeneratorBakingSystem.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\PruneOctreeSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\ExecuteAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\QefSolver.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\mesh.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\MatUtils.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Aspects\OctreeLeafAspect.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Statics\DualContouring.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Models\TerrainGeneratorRenderData.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\ChunkAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\density.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\SVD.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\Draw.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNodeType.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\OctreeSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Draw Gizmos\Scripts\GizmoECS.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\DrawMono.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\Givens.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\TerrainGeneratorAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNode.cs" />
     <Compile Include="Assets\Modules\Octree Module\Aspects\OctreeNodeAspect.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\GenerateMesh.cs" />
     <Compile Include="Assets\Modules\Octree Module\Scripts\OctreeUtils.cs" />
     <Compile Include="Assets\Modules\Utils\Noise\PerlinNoise3D.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Models\TerrainGeneratorData.cs" />
@@ -107,6 +105,9 @@
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\Octree.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Aspects\ChunkAspect.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\Noise\PerlinNoise.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Aspects\OctreeLeafAspect.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Statics\OctreeLOD.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TestAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\GameManager.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\DrawCubeInLines.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\Config.cs" />
@@ -116,7 +117,6 @@
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\PlayerInput.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\Mat3.cs" />
     <Compile Include="Assets\Modules\Draw Gizmos\Scripts\ExecuteAuthoring.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Systems\OctreeSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Draw Gizmos\Scripts\GizmoSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Common\Scripts\UtilsInstaller.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\TestManager.cs" />

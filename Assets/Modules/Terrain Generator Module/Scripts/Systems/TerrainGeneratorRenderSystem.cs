@@ -1,3 +1,5 @@
+//#define DEBUG_TerrainGeneratorREnderSystem_Verbose
+
 using System.Collections;
 using System.Collections.Generic;
 using TerrainGenerator.Utils;
@@ -10,7 +12,8 @@ using UnityEngine;
 namespace TerrainGenerator 
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    [UpdateAfter(typeof(DualContouring))]
     public partial struct TerrainGeneratorRenderSystem : ISystem
     {
         private EntityQuery singletonRenderQuery;
@@ -20,8 +23,9 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+#if DEBUG_TerrainGeneratorREnderSystem_Verbose
             Debug.Log($"[{this.ToString()}]OnCreate");
-
+#endif
             state.RequireForUpdate<TerrainGeneratorRenderComponent>();
 
             singletonRenderQuery = state.GetEntityQuery(typeof(TerrainGeneratorRenderComponent));
@@ -30,15 +34,12 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            Debug.Log($"[{this.ToString()}]OnUpdate");
+#if DEBUG_TerrainGeneratorREnderSystem_Verbose
+            Debug.Log($"[{this.ToString()}]OnCreate");
+#endif
             // GetSingleton
             Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
             TerrainGeneratorRenderComponent renderComponent = state.GetComponentLookup<TerrainGeneratorRenderComponent>(true)[singletonRenderEnitity];
-
-            if (!UpdateTargtPosition(renderComponent)) 
-            {
-                return;
-            }
 
             // Esta acción se tiene que cuando empieza el ciclo de SystenRender para que se vean bien las shapes
             DrawHelper.ClearOnDrawGizmoActions();
@@ -48,6 +49,8 @@ namespace TerrainGenerator
                 return;
             }
 
+            UpdateTargetPosition();
+
             foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalToWorld>, RefRO<ChunkComponent>>())
             {
                 if (renderComponent.showTerrainGeneratorBoundingBox) 
@@ -55,31 +58,13 @@ namespace TerrainGenerator
                     DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
                 }
             }
+
         }
 
-        private bool UpdateTargtPosition(TerrainGeneratorRenderComponent renderComponent) 
+        private void UpdateTargetPosition()
         {
-            string msg = "";
-            Camera camera;
-
-            switch (renderComponent.LODPointOfView) 
-            {
-                case LODPointOfView.MainCamera:
-                    msg += "CamaraMain";
-                    camera = Camera.main;
-                    break;
-                default:
-                    msg += "CurrentCamera";
-                    camera = Camera.current;
-                    break;
-            }
-
-            if (camera) 
-            {
-                targetPosition = camera.transform.position;
-            }
-
-            return camera != null;
+            Camera camera = Camera.main;
+            targetPosition = camera.transform.position;
         }
 
         /// <summary>

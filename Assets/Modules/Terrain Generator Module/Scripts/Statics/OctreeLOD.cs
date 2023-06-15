@@ -1,27 +1,16 @@
-using TerrainGenerator;
-using TerrainGenerator.Utils;
-using Unity.Burst;
-using Unity.Collections;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace TerrainGenerator
+namespace TerrainGenerator 
 {
-    public partial class OctreeSystemGroup : ComponentSystemGroup
+    public static class OctreeLOD
     {
-    }
-
-    [UpdateInGroup(typeof(OctreeSystemGroup), OrderFirst = true)]
-    public partial class OctreeSystem : SystemBase
-    {
-        private EntityManager entityManager;
-
-        private float3 targetPosition;
-
         public static readonly float3[] childMap =
-        {
+       {
             new float3(-1,-1,-1),
             new float3(1,-1,-1),
             new float3(-1,1,-1),
@@ -32,50 +21,12 @@ namespace TerrainGenerator
             new float3(1,1,1)
         };
 
-        protected override void OnCreate()
+        public static float3 GetTargetPosition() 
         {
-            entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            targetPosition = float3.zero;
+            return Camera.main.transform.position;
         }
 
-        protected override void OnUpdate()
-        {
-            Camera camera = Camera.main;
-   
-            if (camera != null)
-            {
-                targetPosition = camera.transform.position;
-            }
-
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
-
-            UpdateOctreeLeaves(ecb);
-
-            Dependency.Complete();
-            ecb.Playback(EntityManager);
-            ecb.Dispose();
-        }
-
-
-        private void UpdateOctreeLeaves(EntityCommandBuffer ecb)
-        {
-            Entities.ForEach((OctreeLeafAspect leaf) =>
-            {
-                if (leaf.Depth > 0)
-                {
-                    if (OctreeUtils.CheckActivationVolume(targetPosition, leaf.Position, leaf.Size)) 
-                    {
-                        SplitLeaf(leaf, ecb);
-                    }
-                }
-            }).WithoutBurst().Run();
-        }
-
-    /// <summary>
-    /// Conver a leaf into a branch
-    /// </summary>
-    /// <param name="octreeNode"></param>
-    private void SplitLeaf(OctreeLeafAspect octreeNode, EntityCommandBuffer ecb) 
+        public static void SplitLeaf(OctreeLeafAspect octreeNode, EntityCommandBuffer ecb)
         {
             ecb.RemoveComponent<OctreeLeafComponent>(octreeNode.self);
 
@@ -111,13 +62,13 @@ namespace TerrainGenerator
                 ecb.AddComponent(childEntity, octreeLeafComponent);
 
                 //DualContoiring
-                var chunkComponent = new ChunkComponent
+               /* var chunkComponent = new ChunkComponent
                 {
                     resolution = OctreeUtils.depthResolution[octreeNodeComponent.depth],
                     size = halfSize,
                 };
-
-                ecb.AddComponent(childEntity, chunkComponent);
+*/
+                //ecb.AddComponent(childEntity, chunkComponent);
                 ecb.AddBuffer<GridVertexElement>(childEntity);
                 ecb.AddBuffer<CellElement>(childEntity);
                 ecb.AddBuffer<VerticesBuffer>(childEntity);
@@ -127,7 +78,7 @@ namespace TerrainGenerator
                 childs[childIndex] = childEntity;
             }
 
-            ecb.AddComponent(octreeNode.self, new OctreeBranchComponent 
+            ecb.AddComponent(octreeNode.self, new OctreeBranchComponent
             {
                 child0 = childs[0],
                 child1 = childs[1],
@@ -138,8 +89,6 @@ namespace TerrainGenerator
                 child6 = childs[6],
                 child7 = childs[7]
             });
-
-
         }
     }
 }

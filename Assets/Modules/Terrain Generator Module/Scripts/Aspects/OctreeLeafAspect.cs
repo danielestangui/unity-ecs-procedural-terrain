@@ -7,7 +7,8 @@ using UnityEngine;
 
 namespace TerrainGenerator 
 {
-    readonly partial struct OctreeLeafAspect : IAspect
+    // a.k.a. Chunk
+    public readonly partial struct OctreeLeafAspect : IAspect
     {
         public readonly Entity self;
 

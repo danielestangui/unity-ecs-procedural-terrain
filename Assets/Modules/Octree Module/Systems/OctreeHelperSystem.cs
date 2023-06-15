@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TerrainGenerator
 {
-    [UpdateInGroup(typeof(OctreeSystemGroup))]
+    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
     [UpdateAfter(typeof(PruneOctreeSystem))]
     [BurstCompile]
     public partial struct OctreeHelperSystem : ISystem
