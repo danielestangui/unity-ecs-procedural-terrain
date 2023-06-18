@@ -12,4 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f7998cb61c82e4eaf1cc370d5a9b10, type: 3}
   m_Name: Terrain Generator Render Data
   m_EditorClassIdentifier: 
-  showTerrainGeneratorBoundingBox: 1
+  showLeafBoundingBox:
+    enable: 0
+    thickness: 0.239
+    color: {r: 1, g: 0.8774305, b: 0, a: 1}
+  showGridVertex:
+    enable: 0
+    radius: 0.1
+    gradientColor: 0
+    airColor: {r: 1, g: 1, b: 1, a: 1}
+    groundColor: {r: 0, g: 0, b: 0, a: 1}
+  showCell:
+    enable: 1
+    onlyCellWithVertex: 1
+    thickness: 1
+    color: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+  showVertex:
+    enable: 1
+    radius: 0.1
+    color: {r: 1, g: 0.95747614, b: 0, a: 1}
+    enableNormals: 1
+    normalLenght: 0.747
+    normalColor: {r: 0, g: 0, b: 1, a: 1}
+  showEdge:
+    enable: 1
+    thickness: 1
+    interiorColor: {r: 1, g: 0, b: 0.89620495, a: 1}
+    borderColor: {r: 0.40399554, g: 0, b: 0.6132076, a: 1}

@@ -7,6 +7,8 @@ using Unity.Transforms;
 using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 
+//[assembly: RegisterGenericComponentType(typeof(TerrainGenerator.ChunkAspect))]
+
 namespace TerrainGenerator
 {
     readonly partial struct ChunkAspect : IAspect

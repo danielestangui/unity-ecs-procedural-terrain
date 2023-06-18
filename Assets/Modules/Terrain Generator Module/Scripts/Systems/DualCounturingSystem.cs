@@ -1,34 +1,37 @@
+#define DEBUG_DualCounturingSystem__Verbose
+
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
 using TerrainGenerator.Utils;
-using Unity.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Animations;
 
 namespace TerrainGenerator
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(PruneOctreeSystem))]
+    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
+    [UpdateAfter(typeof(TerrainGeneratorSystem))]
     public partial struct DualCounturingSystem : ISystem
     {
-        [BurstCompile]
+
         public void OnCreate(ref SystemState state)
-        {        
+        {
+#if DEBUG_DualCounturingSystem__Verbose
+            Debug.Log($"[DualContouring] OnCreate");
+#endif
         }
 
-        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+#if DEBUG_DualCounturingSystem__Verbose
+            Debug.Log($"[DualContouring] OnUpdate");
+#endif
+
             foreach (var chunk in SystemAPI.Query<ChunkAspect>())
             {
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
@@ -202,7 +205,7 @@ namespace TerrainGenerator
                         chunk.triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
                     }
 
-                    Debug.Log($"[DualCounturingSystem]chunk.triangleBuffer.Length = {chunk.triangleBuffer.Length}");
+                    //Debug.Log($"[DualCounturingSystem]chunk.triangleBuffer.Length = {chunk.triangleBuffer.Length}");
                 }
             }
         }

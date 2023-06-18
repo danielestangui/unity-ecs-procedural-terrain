@@ -48,6 +48,7 @@ namespace TerrainGenerator
                     parent = octreeNode.self,
                     depth = octreeNode.Depth - 1,
                     size = halfSize,
+                    resolution = octreeNode.ResolutionBlob
                 };
 
                 OctreeLeafComponent octreeLeafComponent = new OctreeLeafComponent
@@ -56,24 +57,25 @@ namespace TerrainGenerator
                 };
 
                 Entity childEntity = ecb.CreateEntity();
-
+                
                 ecb.AddComponent(childEntity, transform);
                 ecb.AddComponent(childEntity, octreeNodeComponent);
                 ecb.AddComponent(childEntity, octreeLeafComponent);
 
                 //DualContoiring
-               /* var chunkComponent = new ChunkComponent
+                var chunkComponent = new ChunkComponent
                 {
-                    resolution = OctreeUtils.depthResolution[octreeNodeComponent.depth],
+                    resolution = octreeNode.ResolutionValues[octreeNodeComponent.depth],
                     size = halfSize,
                 };
-*/
-                //ecb.AddComponent(childEntity, chunkComponent);
+
+                ecb.AddComponent(childEntity, chunkComponent);
                 ecb.AddBuffer<GridVertexElement>(childEntity);
                 ecb.AddBuffer<CellElement>(childEntity);
                 ecb.AddBuffer<VerticesBuffer>(childEntity);
                 ecb.AddBuffer<IntersectingEdgesBuffer>(childEntity);
                 ecb.AddBuffer<TrianglesBuffer>(childEntity);
+
 
                 childs[childIndex] = childEntity;
             }

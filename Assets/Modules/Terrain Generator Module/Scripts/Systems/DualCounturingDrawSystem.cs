@@ -14,8 +14,9 @@ using UnityEditor.Searcher;
 
 namespace TerrainGenerator 
 {
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(DualCounturingSystem))]
+    [BurstCompile(CompileSynchronously = true)]
+    //[UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    //[UpdateAfter(typeof(DualCounturingSystem))]
     public partial struct DualCounturingDrawSystem : ISystem
     {
         private const float vertexRadius = 0.1f;
@@ -40,7 +41,7 @@ namespace TerrainGenerator
         {
         }
 
-        [BurstCompile]
+        [BurstCompile(CompileSynchronously = true)]
         public void OnUpdate(ref SystemState state)
         {
             foreach (var chunk in SystemAPI.Query<ChunkAspect>())

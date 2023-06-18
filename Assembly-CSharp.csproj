@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGeneratorSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Common\Scripts\UtilsServerLocator.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\GenerateMeshSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGenerationDrawSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Mono\GenerateMesh.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\QefData.cs" />
@@ -83,10 +84,10 @@
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\MatUtils.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Statics\DualContouring.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Models\TerrainGeneratorRenderData.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\DrawHelper.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\ChunkAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\density.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\SVD.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\Draw.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNodeType.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\OctreeSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Draw Gizmos\Scripts\GizmoECS.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\Noise\PerlinNoise.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Aspects\OctreeLeafAspect.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Statics\OctreeLOD.cs" />
-    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TestAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\GameManager.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\DrawCubeInLines.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\Utils\Config.cs" />

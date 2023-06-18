@@ -30,6 +30,18 @@ namespace TerrainGenerator
         {
             get => node.ValueRO.depth;
         }
+
+        public BlobAssetReference<ResolutionArray> ResolutionBlob
+        {
+            get => node.ValueRO.resolution;
+        }
+
+
+        public BlobArray<int> ResolutionValues
+        {
+            get => node.ValueRO.resolution.Value.Values;
+        }
+
         public Entity Parent
         {
             get => node.ValueRO.parent;

@@ -3,15 +3,13 @@ using Unity.Entities;
 using Unity.Mathematics;
 using TerrainGenerator.Utils;
 using Unity.Collections;
+using UnityEngine;
 
 namespace TerrainGenerator 
 {
-    public partial class TerrainGeneratorSystemGroup : ComponentSystemGroup
-    {
-    }
-
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup), OrderFirst = true)]
-    [BurstCompile]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
+    [UpdateAfter(typeof(PruneOctreeSystem))]
     public partial struct TerrainGeneratorSystem : ISystem
     {
 
@@ -36,6 +34,7 @@ namespace TerrainGenerator
                 chunk.GridVertexArray = GenerateGridVertexData(chunk.Position, chunk.Resolution, chunk.Size);
                 chunk.CellArray = GenerateCellData(chunk.Resolution);
             };
+
         }
 
         /// <summary>

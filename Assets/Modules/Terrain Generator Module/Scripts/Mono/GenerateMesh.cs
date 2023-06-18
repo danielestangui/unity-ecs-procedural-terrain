@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 
 namespace TerrainGenerator
 {
+    [ExecuteAlways]
     public class GenerateMesh : MonoBehaviour
     {
         public MeshRenderer meshRenderer;

@@ -178,6 +178,15 @@
         "com.unity.shadergraph": "14.0.7"
       }
     },
+    "com.unity.rendering.hybrid": {
+      "version": "0.51.1-preview.21",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.entities": "0.51.1-preview.21"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.scriptablebuildpipeline": {
       "version": "1.21.5",
       "depth": 2,

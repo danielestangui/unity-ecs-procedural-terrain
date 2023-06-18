@@ -14,6 +14,6 @@ namespace TerrainGenerator
         [Range(minSize, maxSize)]
         public float size;
 
-        public int[] depthResolution;
+        public ushort[] depthResolution;
     }
 }

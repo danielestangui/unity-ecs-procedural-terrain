@@ -27,7 +27,6 @@ namespace TerrainGenerator
             Debug.Log($"[{this.ToString()}] OnCreate");
 #endif
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            targetPosition = float3.zero;
         }
 
         protected override void OnUpdate()

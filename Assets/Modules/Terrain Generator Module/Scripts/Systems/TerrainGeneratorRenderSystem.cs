@@ -1,4 +1,4 @@
-//#define DEBUG_TerrainGeneratorREnderSystem_Verbose
+//#define DEBUG_TerrainGeneratorRenderSystem_Verbose
 
 using System.Collections;
 using System.Collections.Generic;
@@ -12,69 +12,157 @@ using UnityEngine;
 namespace TerrainGenerator 
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(DualContouring))]
-    public partial struct TerrainGeneratorRenderSystem : ISystem
+    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
+    [UpdateAfter(typeof(DualCounturingSystem))]
+    public partial class TerrainGeneratorRenderSystem : SystemBase
     {
-        private EntityQuery singletonRenderQuery;
+        TerrainGeneratorRenderComponent renderComponent;
 
         private float3 targetPosition;
 
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
+        protected override void OnCreate()
         {
-#if DEBUG_TerrainGeneratorREnderSystem_Verbose
-            Debug.Log($"[{this.ToString()}]OnCreate");
+#if DEBUG_TerrainGeneratorRenderSystem_Verbose
+            Debug.Log($"[TerrainGeneratorRenderSystem]OnCreate");
 #endif
-            state.RequireForUpdate<TerrainGeneratorRenderComponent>();
-
-            singletonRenderQuery = state.GetEntityQuery(typeof(TerrainGeneratorRenderComponent));
+            //SystemAPI.RequireForUpdate<TerrainGeneratorRenderComponent>();
         }
 
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+        protected override void OnUpdate()
         {
-#if DEBUG_TerrainGeneratorREnderSystem_Verbose
-            Debug.Log($"[{this.ToString()}]OnCreate");
+#if DEBUG_TerrainGeneratorRenderSystem_Verbose
+            Debug.Log($"[TerrainGeneratorRenderSystem]OnCreate");
 #endif
-            // GetSingleton
-            Entity singletonRenderEnitity = singletonRenderQuery.GetSingletonEntity();
-            TerrainGeneratorRenderComponent renderComponent = state.GetComponentLookup<TerrainGeneratorRenderComponent>(true)[singletonRenderEnitity];
 
-            // Esta acción se tiene que cuando empieza el ciclo de SystenRender para que se vean bien las shapes
+            // Restart Shapes Cicle
             DrawHelper.ClearOnDrawGizmoActions();
 
-            if (singletonRenderEnitity == Entity.Null) 
+            // GetSingleton
+            if (!SystemAPI.HasSingleton<TerrainGeneratorRenderComponent>()) 
             {
                 return;
             }
 
-            UpdateTargetPosition();
+            renderComponent = SystemAPI.GetSingleton<TerrainGeneratorRenderComponent>();
 
-            foreach (var (transform, chunk) in SystemAPI.Query<RefRO<LocalToWorld>, RefRO<ChunkComponent>>())
+            targetPosition = OctreeLOD.GetTargetPosition();
+
+            // Leafs Bounding Box
+            if (renderComponent.showLeafBoundingBoxEnable) 
             {
-                if (renderComponent.showTerrainGeneratorBoundingBox) 
+                foreach (var leaf in SystemAPI.Query<OctreeLeafAspect>())
                 {
-                    DrawBounds(transform.ValueRO.Position, chunk.ValueRO.size);
+                    DrawHelper.DrawCube(leaf.Position, leaf.Size, renderComponent.showLeafBoundingBoxThickness, renderComponent.showLeafBoundingBoxColor);
                 }
             }
 
-        }
+            // Grid Vertex
+            if (renderComponent.showGridVertexEnable)
+            {
+                foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
+                {
+                    for (int i = 0; i < chunk.GridVertexArray.Length; i++)
+                    {
+                        float interpolator = (chunk.GridVertexArray[i].value + 1) * 0.5f;
+                        Color color = Color.Lerp(renderComponent.showGridVertexAirColor, renderComponent.showGridVertexGroundColor, interpolator);
 
-        private void UpdateTargetPosition()
-        {
-            Camera camera = Camera.main;
-            targetPosition = camera.transform.position;
-        }
+                        if (!renderComponent.showGridVertexGradientColor) 
+                        {
+                            color = (interpolator > 0.5f) ? renderComponent.showGridVertexAirColor : renderComponent.showGridVertexGroundColor;
+                        }
 
-        /// <summary>
-        /// Draw a box with the boundaries of the chunk
-        /// </summary>
-        /// <param name="position"> Chunk pivot postion </param>
-        /// <param name="size"> Size of the chunk </param>
-        private void DrawBounds(float3 position, float size)
-        {
-            DrawHelper.DrawCube(position, size, Color.yellow);
+                        DrawHelper.DrawSphere(chunk.GridVertexArray[i].position, renderComponent.showGridVertexRadius, color);
+                    }
+                }
+            }
+
+            // Cells
+            // TODO: Hay funcionalidades quie se pueden mover a DualContouring.cs
+            if (renderComponent.showCellEnable)
+            {
+                foreach (var chunk in SystemAPI.Query<ChunkAspect>())
+                {
+                    for (int i = 0; i < chunk.CellArray.Length; i++)
+                    {
+                        //If the corner has a vertice
+                        if (renderComponent.showOnlyCellWithVertex)
+                        {
+                            int control = 0;
+
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner0].value < 0.0f ? 0 : 1) << 0;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner1].value < 0.0f ? 0 : 1) << 1;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner2].value < 0.0f ? 0 : 1) << 2;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner3].value < 0.0f ? 0 : 1) << 3;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner4].value < 0.0f ? 0 : 1) << 4;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner5].value < 0.0f ? 0 : 1) << 5;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner6].value < 0.0f ? 0 : 1) << 6;
+                            control |= (chunk.GridVertexArray[chunk.CellArray[i].corner7].value < 0.0f ? 0 : 1) << 7;
+
+                            if (control == 0 || control == 255)
+                            {
+                                continue;
+                            }
+                        }
+
+                        float3[] corners = {
+                            chunk.GridVertexArray[chunk.CellArray[i].corner0].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner1].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner2].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner3].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner4].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner5].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner6].position,
+                            chunk.GridVertexArray[chunk.CellArray[i].corner7].position
+                        };
+
+                        float side = Vector3.Distance(
+                            chunk.GridVertexArray[chunk.CellArray[i].corner0].position, 
+                            chunk.GridVertexArray[chunk.CellArray[i].corner1].position
+                            );
+
+                        float3 center = MeshMaths.GetCenterOfCube(corners);
+
+                        DrawHelper.DrawCube(center, side, renderComponent.showCellThickness, renderComponent.showCellColor);
+                    }
+                }
+            }
+
+            if (renderComponent.showVertexEnable) 
+            {
+                foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
+                {
+                    for (int i = 0; i < chunk.verticesBuffer.Length; i++)
+                    {
+                        VerticeElement vertice = chunk.verticesBuffer[i].vertice;
+
+                        DrawHelper.DrawSphere(vertice.position, renderComponent.showVertexRadius, renderComponent.showVertexColor);
+
+                        if (renderComponent.showVertexEnableNormals) 
+                        {
+                            float3 to = vertice.position + vertice.normal * renderComponent.showVertexNormalLenght;
+                            DrawHelper.DrawLine(vertice.position, to, renderComponent.showVertexNormalColor);
+                        }
+                    }
+                }
+            }
+
+            if (renderComponent.showEdgesEnable) 
+            {
+                foreach (var chunk in SystemAPI.Query<ChunkAspect>())
+                {
+                    for (int i = 0; i < chunk.edgesBuffer.Length; i++)
+                    {
+                        IntersectingEdgesElement edge = chunk.edgesBuffer[i].edgeData;
+
+                        GridVertexElement gridVertex1 = chunk.GridVertexArray[edge.vertexIndex0];
+                        GridVertexElement gridVertex2 = chunk.GridVertexArray[edge.vertexIndex1];
+
+                        bool isBorder = MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution);
+
+                        DrawHelper.DrawLine(gridVertex1.position, gridVertex2.position, (isBorder) ? renderComponent.showEdgesBorderColor : renderComponent.showEdgesInteriorColor);
+                    }
+                }
+            }
         }
     }
 }

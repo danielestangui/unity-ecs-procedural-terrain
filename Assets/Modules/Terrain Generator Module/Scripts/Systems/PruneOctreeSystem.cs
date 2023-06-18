@@ -1,3 +1,5 @@
+//#define DEBUG_PruneOctreeSystem__Verbose
+
 using System.Collections;
 using System.Collections.Generic;
 using TerrainGenerator;
@@ -19,14 +21,20 @@ namespace TerrainGenerator
 
         protected override void OnCreate()
         {
-            Enabled = false;
+#if DEBUG_PruneOctreeSystem__Verbose
+            Debug.Log($"[{this.ToString()}] OnCreate");
+#endif
+
             targetPosition = float3.zero;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         protected override void OnUpdate()
         {
-            targetPosition = OctreeLOD.GetTargetPosition();
+#if DEBUG_PruneOctreeSystem__Verbose
+            Debug.Log($"[{this.ToString()}] OnUpdate");
+#endif
+           targetPosition = OctreeLOD.GetTargetPosition();
 
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
 
@@ -71,7 +79,7 @@ namespace TerrainGenerator
                     //DualContoiring
                     var chunkComponent = new ChunkComponent
                     {
-                        resolution = OctreeUtils.depthResolution[node.Depth],
+                        resolution = node.Resolution[node.Depth],
                         size = node.Size,
                     };
 

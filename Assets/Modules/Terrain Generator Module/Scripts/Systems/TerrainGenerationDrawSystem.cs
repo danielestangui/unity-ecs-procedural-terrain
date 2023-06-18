@@ -14,8 +14,8 @@ using TerrainGenerator.Utils;
 
 namespace TerrainGenerator
 {
-    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    [UpdateAfter(typeof(TerrainGeneratorSystem))]
+    //[UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    //[UpdateAfter(typeof(TerrainGeneratorSystem))]
     [BurstCompile]
     public partial struct TerrainGeneratorDrawSystem : ISystem
     {
@@ -66,7 +66,7 @@ namespace TerrainGenerator
         /// <param name="size"> Size of the chunk </param>
         private void DrawBounds(float3 position, float size)
         {
-            DrawHelper.DrawCube(position, size, Color.yellow);
+            //DrawHelper.DrawCube(position, size, Color.yellow);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace TerrainGenerator
                 float side = Vector3.Distance(gridVertex[cells[cellIndex].corner0].position, gridVertex[cells[cellIndex].corner1].position);
                 float3 center = MeshMaths.GetCenterOfCube(corners);
 
-                DrawHelper.DrawCube(center, side, Color.green);
+                //DrawHelper.DrawCube(center, side, Color.green);
 
 #if DEBUG_TerrainGenerator__DrawCellIndex
                 Draw.DrawText(center, $"[{cellIndex}]");

@@ -15,7 +15,7 @@ namespace TerrainGenerator.Utils
 
         private enum Plane { XZ, XY, YZ }
 
-        public static void DrawCube(float3 center, float side, Color color) 
+        public static void DrawCube(float3 center, float side, float thickness, Color color) 
         {
             float halfside = side * 0.5f;
 
@@ -33,7 +33,7 @@ namespace TerrainGenerator.Utils
 
             onDrawGizmoActions.Add(new Action(() =>
                 {
-                    Draw.Thickness = 2;
+                    Draw.Thickness = thickness;
                     Draw.ThicknessSpace = ThicknessSpace.Pixels;
                     Draw.LineGeometry = LineGeometry.Volumetric3D;
 
@@ -53,8 +53,6 @@ namespace TerrainGenerator.Utils
                     Draw.Line(cornners[3], cornners[7], color);
 
                 }));
-
-            dirtyFlag = true;
         }
 
         private static void DrawCircle(float3 center, float radius, Color color, Plane plane = Plane.XZ)
@@ -96,8 +94,7 @@ namespace TerrainGenerator.Utils
 
         public static void DrawLine(Vector3 from, Vector3 to, Color color) 
         {
-            onDrawGizmoActions.Add(new Action(() => Gizmos.color = color));
-            onDrawGizmoActions.Add(new Action(() => Gizmos.DrawLine(from, to)));
+            onDrawGizmoActions.Add(new Action(() => Draw.Line(from, to, color)));
         }
 
         public static void DrawSphere(float3 position, float radius, Color color) 
