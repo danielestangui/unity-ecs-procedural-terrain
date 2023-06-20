@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Terrain Generator Data
   m_EditorClassIdentifier: 
   size: 7
-  depthResolution: 05000600
+  depthResolution: 0600

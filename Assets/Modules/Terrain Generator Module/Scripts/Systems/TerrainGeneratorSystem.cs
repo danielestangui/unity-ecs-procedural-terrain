@@ -28,6 +28,11 @@ namespace TerrainGenerator
         {
             foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
             {
+                if (chunk.Resolution < 3) 
+                {
+                    return;
+                }
+
                 chunk.verticesBuffer.Clear();
                 chunk.triangleBuffer.Clear();
 
