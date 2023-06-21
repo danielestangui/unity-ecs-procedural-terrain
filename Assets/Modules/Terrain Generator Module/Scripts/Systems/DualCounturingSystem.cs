@@ -1,4 +1,4 @@
-#define DEBUG_DualCounturingSystem__Verbose
+//#define DEBUG_DualCounturingSystem__Verbose
 
 using Unity.Burst;
 using Unity.Entities;
@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using TerrainGenerator.Utils;
 using System.Collections.Generic;
+using Unity.Jobs;
 
 namespace TerrainGenerator
 {
@@ -14,31 +15,26 @@ namespace TerrainGenerator
     [UpdateAfter(typeof(TerrainGeneratorSystem))]
     public partial struct DualCounturingSystem : ISystem
     {
-
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-#if DEBUG_DualCounturingSystem__Verbose
-            Debug.Log($"[DualContouring] OnCreate");
-#endif
         }
 
+        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-#if DEBUG_DualCounturingSystem__Verbose
-            Debug.Log($"[DualContouring] OnUpdate");
-#endif
-
             foreach (var chunk in SystemAPI.Query<ChunkAspect>())
             {
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
 
                 chunk.verticesBuffer.Clear();
 
-                FillVerticeBuffer(chunk, ref edges);
+                FunctionFillVerticeBuffer(chunk, ref edges);
 
                 // Copia la lista para pasarla al bufer
                 chunk.edgesBuffer.Clear();
@@ -51,16 +47,12 @@ namespace TerrainGenerator
                     });
                 }
 
-                Debug.Log($"[DualCounturingSystem]Edges: {chunk.edgesBuffer.Length}");
-
                 chunk.triangleBuffer.Clear();
                 GenerateTriangles(chunk);
-               
-                Debug.Log($"[DualCounturingSystem]Edges.Lenght: {chunk.triangleBuffer.Length}");
             };
         }
 
-        private void FillVerticeBuffer(ChunkAspect chunk,ref List<IntersectingEdgesElement> edges) 
+        private void FunctionFillVerticeBuffer(ChunkAspect chunk,ref List<IntersectingEdgesElement> edges) 
         {
             for (int i = 0; i < chunk.CellArray.Length; i++)
             {
@@ -78,6 +70,28 @@ namespace TerrainGenerator
             }
         }
 
+        struct FillVerticeBuffer : IJobParallelFor 
+        {
+            ChunkAspect chunk;
+            // Esto mal
+            List<IntersectingEdgesElement> edges;
+
+            public void Execute(int i) 
+            {
+                VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.verticesBuffer.Length, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
+
+                if (vertice.index >= 0)
+                {
+                    VerticesBuffer element = new VerticesBuffer
+                    {
+                        vertice = vertice
+                    };
+
+                    chunk.verticesBuffer.Add(element);
+                }
+            }
+        }
+
         private void GenerateTriangles(ChunkAspect chunk) 
         {
             for (int i = 0; i < chunk.edgesBuffer.Length; i++)
@@ -87,22 +101,11 @@ namespace TerrainGenerator
                 GridVertexElement gridVertex1 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0];
                 GridVertexElement gridVertex2 = chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1];
 
-                /*Debug.Log($"IsBound: " +
-                    $"{chunk.edgesBuffer[i].edgeData.vertexIndex0}, {MeshMaths.VertexIsBorder(chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex0], chunk.Resolution)}, " +
-                    $"{chunk.edgesBuffer[i].edgeData.vertexIndex1}, {MeshMaths.VertexIsBorder(chunk.GridVertexArray[chunk.edgesBuffer[i].edgeData.vertexIndex1], chunk.Resolution)}");*/
-
                 // Las aristas que estan incluidas en el bordes del chunk se trataran en otro momento para crear los tris 
                 // Que unen los distintos chunks
                 if (!(MeshMaths.VertexIsBorder(gridVertex1, chunk.Resolution) && 
                     MeshMaths.VertexIsBorder(gridVertex2, chunk.Resolution)))
                 {
-                    // Ordenar cells, damos por hecho que vienen ordeandas 
-                    Debug.Log($"[DualCounturingSystem]Cells: " +
-                        $"{chunk.edgesBuffer[i].edgeData.sharedCells00.index}, " +
-                        $"{chunk.edgesBuffer[i].edgeData.sharedCells01.index}, " +
-                        $"{chunk.edgesBuffer[i].edgeData.sharedCells10.index}, " +
-                        $"{chunk.edgesBuffer[i].edgeData.sharedCells11.index}");
-
                     // Obtenemos todos los vertices que van a formar el tri
                     VerticeElement vertex00 = new VerticeElement();
                     chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells00, ref vertex00);
@@ -117,10 +120,8 @@ namespace TerrainGenerator
                     chunk.GetVerticeFromCell(chunk.edgesBuffer[i].edgeData.sharedCells11, ref vertex11);
 
                     float3 normal = (vertex00.normal + vertex01.normal + vertex10.normal + vertex11.normal)/4;
-                    Debug.Log($"[DualCounturingSystem]Tris a evaluar normal: {normal}");
 
                     // Creamos los tris segun el axis
-                    Debug.Log($"[DualCounturingSystem]Axis: {chunk.edgesBuffer[i].edgeData.axis}");
                     switch (chunk.edgesBuffer[i].edgeData.axis) 
                     {
                         case 0:
@@ -204,8 +205,6 @@ namespace TerrainGenerator
                     {
                         chunk.triangleBuffer.Add(new TrianglesBuffer { Value = tri[j] });
                     }
-
-                    //Debug.Log($"[DualCounturingSystem]chunk.triangleBuffer.Length = {chunk.triangleBuffer.Length}");
                 }
             }
         }

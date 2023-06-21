@@ -35,7 +35,7 @@ namespace TerrainGenerator
             {
                 // Vertices
                 DynamicBuffer<VerticesBuffer> verticeBuffer = entityManager.GetBuffer<VerticesBuffer>(entityNativeArray[i]);
-                Debug.Log($"[GenerateMesh]Vertex Buffer {i}: Tiene {verticeBuffer.Length} vertices.");
+                //Debug.Log($"[GenerateMesh]Vertex Buffer {i}: Tiene {verticeBuffer.Length} vertices.");
 
                 Vector3[] vertices = new Vector3[verticeBuffer.Length];
                 Vector3[] normals = new Vector3[verticeBuffer.Length];
@@ -48,7 +48,7 @@ namespace TerrainGenerator
 
                 // Triangles
                 DynamicBuffer<TrianglesBuffer> triangleBuffer = entityManager.GetBuffer<TrianglesBuffer>(entityNativeArray[i]);
-                Debug.Log($"[GenerateMesh]Triangles Buffer {i}: Tiene {triangleBuffer.Length / 3} triangles.");
+                //Debug.Log($"[GenerateMesh]Triangles Buffer {i}: Tiene {triangleBuffer.Length / 3} triangles.");
                 int[] triangles = new int[triangleBuffer.Length];
 
                 for (int triangleIndex = 0; triangleIndex < triangles.Length; triangleIndex++)
@@ -72,7 +72,7 @@ namespace TerrainGenerator
                     meshTrianglesvalues += triangleValue + ", ";
                 }
 
-                Debug.Log($"[GenerateMesh]Mesh Triangles ({mesh.triangles.Length}) --> {meshTrianglesvalues}");
+                //Debug.Log($"[GenerateMesh]Mesh Triangles ({mesh.triangles.Length}) --> {meshTrianglesvalues}");
             }
 
             entityNativeArray.Dispose();
