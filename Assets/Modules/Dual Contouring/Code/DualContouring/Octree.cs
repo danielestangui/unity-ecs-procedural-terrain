@@ -195,7 +195,7 @@ public class Octree
         }
 
         Vector3 qefPosition = Vector3.zero;
-        qef.solve(qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
+        qef.solve(ref qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
         float error = qef.getError();
 
         // convert to glm vec3 for ease of use
@@ -602,6 +602,7 @@ public class Octree
 
             Vector3 p1 = leaf.min + CHILD_MIN_OFFSETS[c1];
             Vector3 p2 = leaf.min + CHILD_MIN_OFFSETS[c2];
+
             Vector3 p = ApproximateZeroCrossingPosition(p1, p2);
             Vector3 n = CalculateSurfaceNormal(p);
             qef.add(p.x, p.y, p.z, n.x, n.y, n.z);
@@ -612,7 +613,7 @@ public class Octree
         }
 
         Vector3 qefPosition = Vector3.zero;
-        qef.solve(qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
+        qef.solve(ref qefPosition, QEF_ERROR, QEF_SWEEPS, QEF_ERROR);
 
         OctreeDrawInfo drawInfo = new OctreeDrawInfo();
         drawInfo.corners = 0;
