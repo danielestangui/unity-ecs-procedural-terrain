@@ -15,8 +15,8 @@ using UnityEditor.Searcher;
 namespace TerrainGenerator 
 {
     [BurstCompile(CompileSynchronously = true)]
-    //[UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    //[UpdateAfter(typeof(DualCounturingSystem))]
+    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    [UpdateAfter(typeof(DualCounturingSystem))]
     public partial struct DualCounturingDrawSystem : ISystem
     {
         private const float vertexRadius = 0.1f;

@@ -11,7 +11,7 @@ using Unity.Jobs;
 namespace TerrainGenerator
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
+    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
     [UpdateAfter(typeof(TerrainGeneratorSystem))]
     public partial struct DualCounturingSystem : ISystem
     {

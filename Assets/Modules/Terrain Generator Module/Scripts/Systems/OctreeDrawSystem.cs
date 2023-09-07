@@ -12,21 +12,12 @@ using UnityEngine;
 namespace TerrainGenerator 
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
-    [UpdateAfter(typeof(DualCounturingSystem))]
-    public partial class TerrainGeneratorRenderSystem : SystemBase
+    [UpdateInGroup(typeof(OctreeSystemGroup), OrderLast = true)]
+    public partial class OctreeDrawSystem : SystemBase
     {
-        TerrainGeneratorRenderComponent renderComponent;
+        private TerrainGeneratorRenderComponent renderComponent;
 
-        private float3 targetPosition;
-
-        protected override void OnCreate()
-        {
-#if DEBUG_TerrainGeneratorRenderSystem_Verbose
-            Debug.Log($"[TerrainGeneratorRenderSystem]OnCreate");
-#endif
-            //SystemAPI.RequireForUpdate<TerrainGeneratorRenderComponent>();
-        }
+        protected override void OnCreate() {}
 
         protected override void OnUpdate()
         {
@@ -44,8 +35,6 @@ namespace TerrainGenerator
             }
 
             renderComponent = SystemAPI.GetSingleton<TerrainGeneratorRenderComponent>();
-
-            targetPosition = OctreeLOD.GetTargetPosition();
 
             // Leafs Bounding Box
             if (renderComponent.showLeafBoundingBoxEnable) 

@@ -14,8 +14,8 @@ using TerrainGenerator.Utils;
 
 namespace TerrainGenerator
 {
-    //[UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
-    //[UpdateAfter(typeof(TerrainGeneratorSystem))]
+    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    [UpdateAfter(typeof(TerrainGeneratorSystem))]
     [BurstCompile]
     public partial struct TerrainGeneratorDrawSystem : ISystem
     {

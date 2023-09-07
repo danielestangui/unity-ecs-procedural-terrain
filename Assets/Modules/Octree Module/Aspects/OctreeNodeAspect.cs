@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TerrainGenerator
 {
-    readonly partial struct OctreeNodeAspect : IAspect
+    public readonly partial struct OctreeNodeAspect : IAspect
     {
         public readonly Entity self;
 
@@ -31,10 +31,10 @@ namespace TerrainGenerator
             get => node.ValueRO.depth;
         }
 
-        public BlobArray<int> Resolution 
+/*        public BlobArray<int> Resolution 
         {
             get => node.ValueRO.resolution.Value.Values;
-        }
+        }*/
 
         public Entity Parent
         {
@@ -76,6 +76,12 @@ namespace TerrainGenerator
         public bool IsRoot()
         {
             return node.ValueRO.parent == Entity.Null;
+        }
+
+        public bool IsPrunable 
+        {
+            get => node.ValueRO.isPronable;
+            set => node.ValueRW.isPronable = value;
         }
     }
 }

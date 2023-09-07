@@ -37,6 +37,7 @@ namespace TerrainGenerator
                 AddComponent(entity, componentsToAdd);
 
                 // Blob asset
+                /*
                 BlobBuilder blobBuilder = new BlobBuilder(Allocator.Temp);
                 ref ResolutionArray resolutionRoot = ref blobBuilder.ConstructRoot<ResolutionArray>();
 
@@ -48,25 +49,26 @@ namespace TerrainGenerator
                 }
 
                 BlobAssetReference<ResolutionArray> blobAsset = blobBuilder.CreateBlobAssetReference<ResolutionArray>(Allocator.Persistent);
+                */
 
                 // Set Components
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
                     parent = Entity.Null,
-                    size = authoring.data.size,
-                    depth = (authoring.data.depthResolution.Length - 1),
-                    resolution = blobAsset
+                    size = authoring.data.octreeLenght,
+                    //depth = (authoring.data.depthResolution.Length - 1),
+                    depth = (authoring.data.depthResolution)
                 };
 
                 ChunkComponent chunkComponent = new ChunkComponent
                 {
-                    resolution = authoring.data.depthResolution[octreeNodeComponent.depth],
-                    size = authoring.data.size,
+                    //resolution = authoring.data.depthResolution[octreeNodeComponent.depth],
+                    resolution = authoring.data.chunkResolution,
+                    size = authoring.data.minChunkLenght,
                 };
 
                 OctreeLeafComponent octreeLeafComponent = new OctreeLeafComponent
                 {
-                    value = 0
                 };
 
                 Transform transform = GetComponent<Transform>();
@@ -84,38 +86,8 @@ namespace TerrainGenerator
                 AddBuffer<TrianglesBuffer>(entity);
 
                 // Blobbuilder Dispose
-                blobBuilder.Dispose();
+                //blobBuilder.Dispose();
             }
         }
-    }
-
-    public struct OctreeNodeComponent : IComponentData
-    {
-        public float size;
-        public int depth;
-        public Entity parent;
-        public BlobAssetReference<ResolutionArray> resolution;
-    }
-
-    public struct OctreeBranchComponent : IComponentData
-    {
-        public Entity child0;
-        public Entity child1;
-        public Entity child2;
-        public Entity child3;
-        public Entity child4;
-        public Entity child5;
-        public Entity child6;
-        public Entity child7;
-    }
-   
-    public struct OctreeLeafComponent : IComponentData 
-    {
-        public float value;
-    }
-
-    public struct ResolutionArray 
-    {
-        public BlobArray<int> Values;
     }
 }

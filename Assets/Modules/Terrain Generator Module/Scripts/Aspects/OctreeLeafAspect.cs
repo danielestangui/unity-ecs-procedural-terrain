@@ -14,7 +14,7 @@ namespace TerrainGenerator
 
         private readonly RefRO<LocalTransform> transform;
         private readonly RefRO<OctreeNodeComponent> node;
-        private readonly RefRO<OctreeLeafComponent> leaf;
+        private readonly RefRW<OctreeLeafComponent> leaf;
 
         public float3 Position
         {
@@ -31,15 +31,20 @@ namespace TerrainGenerator
             get => node.ValueRO.depth;
         }
 
-        public BlobAssetReference<ResolutionArray> ResolutionBlob
-        {
-            get => node.ValueRO.resolution;
-        }
+        /*  public BlobAssetReference<ResolutionArray> ResolutionBlob
+          {
+              get => node.ValueRO.resolution;
+          }*/
 
 
-        public BlobArray<int> ResolutionValues
+        /*public BlobArray<int> ResolutionValues
         {
             get => node.ValueRO.resolution.Value.Values;
+        }*/
+
+        public int Resolution
+        {
+            get => node.ValueRO.resolution;
         }
 
         public Entity Parent

@@ -8,8 +8,8 @@ using UnityEngine;
 
 namespace TerrainGenerator
 {
-    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
-    [UpdateAfter(typeof(PruneOctreeSystem))]
+    [UpdateInGroup(typeof(OctreeSystemGroup))]
+    [UpdateAfter(typeof(PruneBranchesSystem))]
     [BurstCompile]
     public partial struct OctreeHelperSystem : ISystem
     {

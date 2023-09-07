@@ -8,8 +8,8 @@ using UnityEngine;
 namespace TerrainGenerator 
 {
     [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
-    [UpdateInGroup(typeof(TerrainGenerationSystemGroup))]
-    [UpdateAfter(typeof(PruneOctreeSystem))]
+    [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
+    [UpdateAfter(typeof(TerrainGeneratorSystemGroup))]
     public partial struct TerrainGeneratorSystem : ISystem
     {
 
