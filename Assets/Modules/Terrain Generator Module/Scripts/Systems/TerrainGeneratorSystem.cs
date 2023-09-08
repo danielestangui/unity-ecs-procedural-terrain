@@ -37,7 +37,7 @@ namespace TerrainGenerator
                 chunk.triangleBuffer.Clear();
 
                 chunk.GridVertexArray = GenerateGridVertexData(chunk.Position, chunk.Resolution, chunk.Size);
-                chunk.CellArray = GenerateCellData(chunk.Resolution);
+                //chunk.CellArray = GenerateCellData(chunk.Resolution);
             };
 
         }

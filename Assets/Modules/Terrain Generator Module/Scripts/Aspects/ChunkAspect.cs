@@ -38,12 +38,7 @@ namespace TerrainGenerator
 
         public float Size 
         {
-            get => chunk.ValueRO.size;
-        }
-
-        public int Depth
-        {
-            get => chunk.ValueRO.depth;
+            get => chunk.ValueRO.lenght;
         }
 
         public void GetVerticeFromCell(CellElement cell, ref VerticeElement vertex) 

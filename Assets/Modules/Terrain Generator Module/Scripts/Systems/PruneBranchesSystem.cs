@@ -29,6 +29,7 @@ namespace TerrainGenerator
             EntityCommandBuffer.ParallelWriter ecb = GetEntityCommandBuffer(ref state);
 
             float3 targetPosition = Camera.main.transform.position;
+            int resolution = 0;
 
             // Mark as prunable
             foreach (var node in SystemAPI.Query<OctreeNodeAspect>())
@@ -41,9 +42,11 @@ namespace TerrainGenerator
                     {
                         OctreeLeafAspect childLeaf = SystemAPI.GetAspect<OctreeLeafAspect>(child);
 
+                        resolution = childLeaf.Resolution;
+
                         if (child != Entity.Null)
                         {
-                            if (OctreeUtils.CheckActivationVolume(targetPosition, childLeaf.Position, childLeaf.Size))
+                            if (OctreeUtils.CheckActivationVolume(targetPosition, childLeaf.Position, childLeaf.Lenght))
                             {
                                 isPrunable = false;
                             }
@@ -63,6 +66,7 @@ namespace TerrainGenerator
             new PruneLeavesJob
             {
                 Ecb = ecb,
+                Resolution = resolution
             }.ScheduleParallel();
         }
 
@@ -86,6 +90,7 @@ namespace TerrainGenerator
         public partial struct PruneLeavesJob : IJobEntity
         {
             public EntityCommandBuffer.ParallelWriter Ecb;
+            public int Resolution;
 
             private void Execute([ChunkIndexInQuery] int chunkIndex, OctreeNodeAspect node)
             {
@@ -97,8 +102,8 @@ namespace TerrainGenerator
                     var chunkComponent = new ChunkComponent
                     {
                         //resolution = node.Resolution[node.Depth],
-                        resolution = 6,
-                        size = node.Size,
+                        resolution = Resolution,
+                        lenght = node.Lenght
                     };
 
                     Ecb.AddComponent(chunkIndex,node.self, chunkComponent);

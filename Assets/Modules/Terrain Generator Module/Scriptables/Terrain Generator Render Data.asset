@@ -17,8 +17,8 @@ MonoBehaviour:
     thickness: 0.598
     color: {r: 1, g: 0.8774305, b: 0, a: 1}
   showGridVertex:
-    enable: 0
-    radius: 0.157
+    enable: 1
+    radius: 0.232
     gradientColor: 0
     airColor: {r: 1, g: 1, b: 1, a: 1}
     groundColor: {r: 0, g: 0, b: 0, a: 1}

@@ -21,9 +21,9 @@ namespace TerrainGenerator
             get => transform.ValueRO.Position;
         }
 
-        public float Size 
+        public int Lenght 
         {
-            get => node.ValueRO.size;
+            get => node.ValueRO.lenght;
         }
 
         public int Depth 

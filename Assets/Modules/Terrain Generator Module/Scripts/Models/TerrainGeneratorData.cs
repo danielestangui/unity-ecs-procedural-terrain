@@ -32,7 +32,7 @@ namespace TerrainGenerator
         public ushort depthResolution;
 
         [Header("Chunk Settings")]
-        [Range(2,6)]
+        [Range(3,6)]
         public int chunkResolution;
 
         /// <summary>

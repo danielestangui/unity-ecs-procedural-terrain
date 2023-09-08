@@ -41,7 +41,7 @@ namespace TerrainGenerator
             {
                 foreach (var leaf in SystemAPI.Query<OctreeLeafAspect>())
                 {
-                    DrawHelper.DrawCube(leaf.Position, leaf.Size, renderComponent.showLeafBoundingBoxThickness, renderComponent.showLeafBoundingBoxColor);
+                    DrawHelper.DrawCube(leaf.Position, leaf.Lenght, renderComponent.showLeafBoundingBoxThickness, renderComponent.showLeafBoundingBoxColor);
                 }
             }
 

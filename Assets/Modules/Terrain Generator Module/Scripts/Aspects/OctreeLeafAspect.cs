@@ -20,27 +20,15 @@ namespace TerrainGenerator
         {
             get => transform.ValueRO.Position;
         }
-
-        public float Size
+        public int Lenght
         {
-            get => node.ValueRO.size;
+            get => node.ValueRO.lenght;
         }
 
         public int Depth
         {
             get => node.ValueRO.depth;
         }
-
-        /*  public BlobAssetReference<ResolutionArray> ResolutionBlob
-          {
-              get => node.ValueRO.resolution;
-          }*/
-
-
-        /*public BlobArray<int> ResolutionValues
-        {
-            get => node.ValueRO.resolution.Value.Values;
-        }*/
 
         public int Resolution
         {
@@ -51,7 +39,6 @@ namespace TerrainGenerator
         {
             get => node.ValueRO.parent;
         }
-
 
         public bool IsRoot()
         {

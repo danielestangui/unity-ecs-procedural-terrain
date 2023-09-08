@@ -58,7 +58,7 @@ namespace TerrainGenerator
             {
                 if (leaf.Depth > 0)
                 {
-                    if (OctreeUtils.CheckActivationVolume(TargetPosition, leaf.Position, leaf.Size))
+                    if (OctreeUtils.CheckActivationVolume(TargetPosition, leaf.Position, leaf.Lenght))
                     {
                         SplitLeaf(chunkIndex,leaf, Ecb, TargetPosition);
                     }
@@ -69,31 +69,32 @@ namespace TerrainGenerator
             /// Split one leaf into 8 leaves
             /// </summary>
             /// <param name="index"></param>
-            /// <param name="octreeNode"></param>
+            /// <param name="octreeLeaf"></param>
             /// <param name="ecb"></param>
-            private static void SplitLeaf(int index, OctreeLeafAspect octreeNode, EntityCommandBuffer.ParallelWriter ecb, float3 targetPosition)
+            private static void SplitLeaf(int index, OctreeLeafAspect octreeLeaf, EntityCommandBuffer.ParallelWriter ecb, float3 targetPosition)
             {
-                ecb.RemoveComponent<OctreeLeafComponent>(index, octreeNode.self);
+                ecb.RemoveComponent<OctreeLeafComponent>(index, octreeLeaf.self);
+                ecb.RemoveComponent<ChunkComponent>(index, octreeLeaf.self);
 
                 Entity[] childs = new Entity[8];
 
-                float halfSize = octreeNode.Size * 0.5f;
-                float quarterSize = halfSize * 0.5f;
+                int halfLenght = octreeLeaf.Lenght / 2;
+                int quarterLenght = halfLenght / 2;
 
                 // Create leaves
                 for (int childIndex = 0; childIndex < Octree.childMap.Length; childIndex++)
                 {
                     LocalTransform transform = new LocalTransform
                     {
-                        Position = octreeNode.Position + Octree.childMap[childIndex] * quarterSize
+                        Position = octreeLeaf.Position + Octree.childMap[childIndex] * quarterLenght
                     };
 
                     OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                     {
-                        parent = octreeNode.self,
-                        depth = octreeNode.Depth - 1,
-                        size = halfSize/*,
-                        resolution = octreeNode.ResolutionBlob*/
+                        parent = octreeLeaf.self,
+                        depth = octreeLeaf.Depth - 1,
+                        lenght = halfLenght,
+                        resolution = octreeLeaf.Resolution
                     };
 
                     OctreeLeafComponent octreeLeafComponent = new OctreeLeafComponent
@@ -110,8 +111,8 @@ namespace TerrainGenerator
                     var chunkComponent = new ChunkComponent
                     {
                         //resolution = octreeNode.ResolutionValues[octreeNodeComponent.depth],
-                        resolution = octreeNode.Resolution,
-                        size = halfSize,
+                        resolution = octreeLeaf.Resolution,
+                        lenght = halfLenght
                     };
 
                     ecb.AddComponent(index, childEntity, chunkComponent);
@@ -125,7 +126,7 @@ namespace TerrainGenerator
                     childs[childIndex] = childEntity;
                 }
 
-                ecb.AddComponent(index, octreeNode.self, new OctreeBranchComponent
+                ecb.AddComponent(index, octreeLeaf.self, new OctreeBranchComponent
                 {
                     child0 = childs[0],
                     child1 = childs[1],

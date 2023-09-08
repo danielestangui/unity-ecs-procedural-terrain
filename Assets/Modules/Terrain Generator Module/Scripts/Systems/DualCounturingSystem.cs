@@ -10,7 +10,7 @@ using Unity.Jobs;
 
 namespace TerrainGenerator
 {
-    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
     [UpdateAfter(typeof(TerrainGeneratorSystem))]
     public partial struct DualCounturingSystem : ISystem

@@ -73,10 +73,12 @@
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGeneratorSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Common\Scripts\UtilsServerLocator.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Statics\Octree.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Aspects\OctreeNodeAspect.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\GenerateMeshSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\TerrainGenerationDrawSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Mono\GenerateMesh.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\SystemGroups.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Components\ChunkComponents.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\QefData.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeDrawInfo.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\ExecuteAuthoring.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\DualCounturingDrawSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\TerrainGeneratorAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNode.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Aspects\OctreeNodeAspect.cs" />
     <Compile Include="Assets\Modules\Octree Module\Scripts\OctreeUtils.cs" />
     <Compile Include="Assets\Modules\Utils\Noise\PerlinNoise3D.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Models\TerrainGeneratorData.cs" />

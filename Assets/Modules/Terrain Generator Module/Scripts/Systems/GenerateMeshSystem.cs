@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 
 namespace TerrainGenerator 
 {
-    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
     [UpdateAfter(typeof(DualCounturingSystem))]
     public partial struct GenerateMeshSystem : ISystem 

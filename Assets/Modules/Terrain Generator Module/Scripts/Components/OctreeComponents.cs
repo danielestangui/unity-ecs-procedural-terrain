@@ -7,11 +7,11 @@ namespace TerrainGenerator
 {
     public struct OctreeNodeComponent : IComponentData
     {
-        public float size;
         public int depth;
         public Entity parent;
         public int resolution;
         public bool isPronable;
+        public int lenght;
     }
 
     public struct OctreeBranchComponent : IComponentData
