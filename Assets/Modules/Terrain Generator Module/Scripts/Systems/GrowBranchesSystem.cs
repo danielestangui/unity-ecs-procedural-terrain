@@ -111,6 +111,7 @@ namespace TerrainGenerator
                     var chunkComponent = new ChunkComponent
                     {
                         //resolution = octreeNode.ResolutionValues[octreeNodeComponent.depth],
+                        dirtyFlag = true,
                         resolution = octreeLeaf.Resolution,
                         lenght = halfLenght
                     };

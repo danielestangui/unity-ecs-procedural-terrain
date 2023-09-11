@@ -10,7 +10,7 @@ using Unity.Jobs;
 
 namespace TerrainGenerator
 {
-    //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
     [UpdateAfter(typeof(TerrainGeneratorSystem))]
     public partial struct DualCounturingSystem : ISystem
@@ -28,8 +28,23 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var chunk in SystemAPI.Query<ChunkAspect>())
+            new FillVerticeBufferJob
             {
+
+            }.ScheduleParallel();
+        }
+
+        [BurstCompile]
+        public partial struct FillVerticeBufferJob : IJobEntity
+        {
+            private void Execute(ChunkAspect chunk)
+            {
+
+                if (!chunk.DirtyFlag) 
+                {
+                    return; 
+                }
+
                 List<IntersectingEdgesElement> edges = new List<IntersectingEdgesElement>();
 
                 chunk.verticesBuffer.Clear();
@@ -39,9 +54,10 @@ namespace TerrainGenerator
                 // Copia la lista para pasarla al bufer
                 chunk.edgesBuffer.Clear();
 
-                foreach (IntersectingEdgesElement element  in edges) 
+                foreach (IntersectingEdgesElement element in edges)
                 {
-                    chunk.edgesBuffer.Add(new IntersectingEdgesBuffer
+                    chunk.edgesBuffer.Add(new
+                        IntersectingEdgesBuffer
                     {
                         edgeData = element
                     });
@@ -49,10 +65,12 @@ namespace TerrainGenerator
 
                 chunk.triangleBuffer.Clear();
                 GenerateTriangles(chunk);
-            };
+
+                chunk.DirtyFlag = false;
+            }
         }
 
-        private void FunctionFillVerticeBuffer(ChunkAspect chunk,ref List<IntersectingEdgesElement> edges) 
+        static private void FunctionFillVerticeBuffer(ChunkAspect chunk,ref List<IntersectingEdgesElement> edges) 
         {
             for (int i = 0; i < chunk.CellArray.Length; i++)
             {
@@ -70,29 +88,7 @@ namespace TerrainGenerator
             }
         }
 
-        struct FillVerticeBuffer : IJobParallelFor 
-        {
-            ChunkAspect chunk;
-            // Esto mal
-            List<IntersectingEdgesElement> edges;
-
-            public void Execute(int i) 
-            {
-                VerticeElement vertice = DualContouring.CalculatePoint(i, chunk.verticesBuffer.Length, chunk.GridVertexArray, chunk.CellArray, chunk.Resolution, ref edges);
-
-                if (vertice.index >= 0)
-                {
-                    VerticesBuffer element = new VerticesBuffer
-                    {
-                        vertice = vertice
-                    };
-
-                    chunk.verticesBuffer.Add(element);
-                }
-            }
-        }
-
-        private void GenerateTriangles(ChunkAspect chunk) 
+        static private void GenerateTriangles(ChunkAspect chunk) 
         {
             for (int i = 0; i < chunk.edgesBuffer.Length; i++)
             {

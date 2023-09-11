@@ -26,8 +26,26 @@ namespace TerrainGenerator
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
+            new GeneateDataJob
             {
+
+            }.ScheduleParallel();
+        }
+
+        /// <summary>
+        /// Generate all the data that dual contouring algorithm needs such as the grid vertex and the cells 
+        /// formed by this vertices
+        /// </summary>
+        [BurstCompile]
+        public partial struct GeneateDataJob : IJobEntity
+        {
+            private void Execute(ChunkAspect chunk) 
+            {
+                if (!chunk.DirtyFlag) 
+                {
+                    return;
+                }
+
                 if (chunk.Resolution < 3) 
                 {
                     return;
@@ -37,9 +55,9 @@ namespace TerrainGenerator
                 chunk.triangleBuffer.Clear();
 
                 chunk.GridVertexArray = GenerateGridVertexData(chunk.Position, chunk.Resolution, chunk.Size);
-                //chunk.CellArray = GenerateCellData(chunk.Resolution);
-            };
+                chunk.CellArray = GenerateCellData(chunk.Resolution);
 
+            }
         }
 
         /// <summary>
@@ -49,7 +67,7 @@ namespace TerrainGenerator
         /// <param name="resolution"> Number of grid vertex per chunk side </param>
         /// <param name="size"> Size of the chunk </param>
         /// <returns></returns>
-        private GridVertexElement[] GenerateGridVertexData(float3 position, int resolution, float size) 
+        static private GridVertexElement[] GenerateGridVertexData(float3 position, int resolution, float size) 
         {
             GridVertexElement[] gridVertexArray = new GridVertexElement[resolution * resolution * resolution];
 
@@ -70,7 +88,7 @@ namespace TerrainGenerator
         /// </summary>
         /// <param name="resolution"> Number of grid vertex per chunk side </param>
         /// <returns></returns>
-        private CellElement[] GenerateCellData(int resolution) 
+        static private CellElement[] GenerateCellData(int resolution) 
         {
             int cellResolution = (resolution - 1);
             int cellArrayResolution = cellResolution * cellResolution * cellResolution;

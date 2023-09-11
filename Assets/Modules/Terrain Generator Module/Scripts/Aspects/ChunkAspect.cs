@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace TerrainGenerator
 {
-    readonly partial struct ChunkAspect : IAspect
+    public readonly partial struct ChunkAspect : IAspect
     {
         public readonly Entity self;
 
@@ -39,6 +39,12 @@ namespace TerrainGenerator
         public float Size 
         {
             get => chunk.ValueRO.lenght;
+        }
+
+        public bool DirtyFlag 
+        {
+            get => chunk.ValueRO.dirtyFlag;
+            set => chunk.ValueRW.dirtyFlag = value;
         }
 
         public void GetVerticeFromCell(CellElement cell, ref VerticeElement vertex) 

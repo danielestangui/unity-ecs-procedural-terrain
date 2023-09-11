@@ -7,8 +7,9 @@ using UnityEngine;
 
 namespace TerrainGenerator 
 {
-    struct ChunkComponent : IComponentData
+    public struct ChunkComponent : IComponentData
     {
+        public bool dirtyFlag;
         public int resolution;
         public float lenght;
     }

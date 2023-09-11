@@ -9,10 +9,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{A9650CD7-3AF4-FCED-36F6-4FE24B7E5787}</ProjectGuid>
+    <ProjectGuid>{03F08946-4138-2635-A81F-3AFD58D6C12E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Unity.Mathematics</AssemblyName>
+    <AssemblyName>Destrom.Player</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -26,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -56,100 +56,28 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.0f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.Common.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.AspectGenerator.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.Common.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="C:\Users\xoia\Documents\Repositiorio\UnityECSTestProject\Library\PackageCache\com.unity.entities@1.0.14\Unity.Entities\SourceGenerators\Unity.Entities.SourceGen.JobEntityGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool4x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\classicnoise3D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\quaternion.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\noise3D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\noise3Dgrad.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\noise4D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double4x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double2x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double3x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool4x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float2x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float4x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\cellular2x2x2.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int3x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\half4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double3x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float4x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\half.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint4x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double2x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int2x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int3x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float3x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\random.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\psrdnoise2D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\rigid_transform.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\classicnoise4D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool2x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\cellular2D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\matrix.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Geometry\MinMaxAABB.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint3x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint2x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint2x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int2x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double4x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\math.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\PropertyAttributes.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint4x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double3x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int2x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool3x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int4x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double4x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float4x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Il2CppEagerStaticClassConstructionAttribute.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool2x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\matrix.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\cellular3D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Geometry\Plane.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool3x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float3x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\noise2D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint4x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int4x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float3x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint3x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int3x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool3x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\classicnoise2D.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float2x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool2x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint3x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\double2x4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\common.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool4x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Noise\cellular2x2.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\uint2x3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\half2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\float2x2.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\half3.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\math_unity_conversion.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\bool4.gen.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Properties\AssemblyInfo.cs" />
-    <Compile Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\int4x4.gen.cs" />
+    <Compile Include="Assets\Modules\Player Module\Scripts\Systems\PlayerMoveSystem.cs" />
+    <Compile Include="Assets\Modules\Player Module\Scripts\Components\PlayerInputComponent.cs" />
+    <Compile Include="Assets\Modules\Player Module\Scripts\Inputs Actions\PlayerInputActions.cs" />
+    <Compile Include="Assets\Modules\Player Module\Scripts\Systems\GetPlayerInputSystem.cs" />
+    <Compile Include="Assets\Modules\Player Module\Scripts\Authorings\PlayerAuthoring.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\PackageCache\com.unity.mathematics@1.2.6\Unity.Mathematics\Unity.Mathematics.asmdef" />
+    <None Include="Assets\Modules\Player Module\Scripts\Destrom.Player.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -808,6 +736,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.Burst.csproj">
+      <Project>{544C7AEF-78B2-8B84-8D56-C90F2EDD067B}</Project>
+      <Name>Unity.Burst</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Collections.csproj">
+      <Project>{27951B08-6CBC-A13D-2B2E-ED698A2F9BD0}</Project>
+      <Name>Unity.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Entities.csproj">
+      <Project>{2B47A44F-D3E3-07A4-9846-2FB06FE861E3}</Project>
+      <Name>Unity.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.InputSystem.csproj">
+      <Project>{F3D8E8B4-E4A0-7830-69F7-8F36DC3C6D8F}</Project>
+      <Name>Unity.InputSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Mathematics.csproj">
+      <Project>{A9650CD7-3AF4-FCED-36F6-4FE24B7E5787}</Project>
+      <Name>Unity.Mathematics</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Transforms.csproj">
+      <Project>{99FB5588-5FAD-93CF-36D7-D022FFC348CA}</Project>
+      <Name>Unity.Transforms</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Entities.Hybrid.csproj">
+      <Project>{84CD69CB-D863-BE39-28C5-234671C62D17}</Project>
+      <Name>Unity.Entities.Hybrid</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{47914640-E32E-CC0F-D947-3CF6244155EA}</Project>
       <Name>UnityEditor.UI</Name>
