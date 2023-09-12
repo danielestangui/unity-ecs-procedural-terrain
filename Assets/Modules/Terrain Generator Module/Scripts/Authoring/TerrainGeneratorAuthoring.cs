@@ -45,8 +45,6 @@ namespace TerrainGenerator
                     resolution = authoring.data.chunkResolution
                 };
 
-                Debug.Log("");
-
                 ChunkComponent chunkComponent = new ChunkComponent
                 {
                     lenght = authoring.data.octreeLenght * (1 << (authoring.data.depthResolution - 1)),

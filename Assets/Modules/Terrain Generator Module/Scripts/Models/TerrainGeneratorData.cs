@@ -28,11 +28,11 @@ namespace TerrainGenerator
         /// <summary>
         /// How deep can the octree create new branches
         /// </summary>
-        [Range(1, 15)]
+        [Range(1, 4)]
         public ushort depthResolution;
 
         [Header("Chunk Settings")]
-        [Range(3,6)]
+        [Range(3,15)]
         public int chunkResolution;
 
         /// <summary>

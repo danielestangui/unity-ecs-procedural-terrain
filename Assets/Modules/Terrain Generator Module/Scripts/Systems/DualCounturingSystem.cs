@@ -65,8 +65,6 @@ namespace TerrainGenerator
 
                 chunk.triangleBuffer.Clear();
                 GenerateTriangles(chunk);
-
-                chunk.DirtyFlag = false;
             }
         }
 

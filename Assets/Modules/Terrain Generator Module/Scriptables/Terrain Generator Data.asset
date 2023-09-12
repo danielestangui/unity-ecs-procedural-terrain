@@ -15,4 +15,4 @@ MonoBehaviour:
   labelOctreeLenght: Octree side is 16 meters.
   _minChunkLenght: 8
   depthResolution: 2
-  chunkResolution: 5
+  chunkResolution: 6

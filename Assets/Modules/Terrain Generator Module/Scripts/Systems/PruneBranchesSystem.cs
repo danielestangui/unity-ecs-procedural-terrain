@@ -101,7 +101,6 @@ namespace TerrainGenerator
                     //DualContoiring
                     var chunkComponent = new ChunkComponent
                     {
-                        //resolution = node.Resolution[node.Depth],
                         dirtyFlag = true,
                         resolution = Resolution,
                         lenght = node.Lenght

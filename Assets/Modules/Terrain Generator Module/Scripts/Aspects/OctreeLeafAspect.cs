@@ -14,7 +14,7 @@ namespace TerrainGenerator
 
         private readonly RefRO<LocalTransform> transform;
         private readonly RefRO<OctreeNodeComponent> node;
-        private readonly RefRW<OctreeLeafComponent> leaf;
+        private readonly RefRO<OctreeLeafComponent> leaf;
 
         public float3 Position
         {

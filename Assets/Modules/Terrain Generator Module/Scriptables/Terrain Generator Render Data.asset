@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showLeafBoundingBox:
     enable: 0
-    thickness: 0.598
+    thickness: 0.244
     color: {r: 1, g: 0.87843144, b: 0, a: 1}
   showGridVertex:
     enable: 0
-    radius: 0.188
+    radius: 0.323
     gradientColor: 0
     airColor: {r: 1, g: 1, b: 1, a: 1}
     groundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -31,11 +31,11 @@ MonoBehaviour:
     enable: 1
     radius: 0.363
     color: {r: 1, g: 0.74702513, b: 0, a: 1}
-    enableNormals: 1
+    enableNormals: 0
     normalLenght: 1
     normalColor: {r: 0, g: 0.46187544, b: 1, a: 1}
   showEdge:
-    enable: 0
+    enable: 1
     thickness: 1
     interiorColor: {r: 1, g: 0, b: 0.89620495, a: 1}
     borderColor: {r: 0.40399554, g: 0, b: 0.6132076, a: 1}

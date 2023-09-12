@@ -8,13 +8,11 @@ using UnityEngine.Rendering;
 
 namespace TerrainGenerator 
 {
-    //[WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
+    [WorldSystemFilter(WorldSystemFilterFlags.Default | WorldSystemFilterFlags.Editor)]
     [UpdateInGroup(typeof(TerrainGeneratorSystemGroup))]
     [UpdateAfter(typeof(DualCounturingSystem))]
     public partial struct GenerateMeshSystem : ISystem 
-    {
-        private static bool enable = true;
-       
+    {       
         public void OnCreate(ref SystemState state) 
         {
         }
@@ -25,15 +23,24 @@ namespace TerrainGenerator
 
         public void OnUpdate(ref SystemState state) 
         {
-            if (enable) 
+            foreach (var chunk in SystemAPI.Query<ChunkAspect>()) 
             {
-                var query = new EntityQueryBuilder(Allocator.Temp).WithAll<ChunkComponent>().Build(state.EntityManager);
-                var entities = query.ToEntityArray(Allocator.Temp);
-
-                foreach (var entity in entities) 
+                if (!chunk.DirtyFlag)
                 {
-                    CreateMesh(SystemAPI.GetAspect<ChunkAspect>(entity), ref state);                  
+                    return;
                 }
+            }
+
+            var query = new EntityQueryBuilder(Allocator.Temp).WithAll<ChunkComponent>().Build(state.EntityManager);
+            var entities = query.ToEntityArray(Allocator.Temp);
+
+            foreach (var entity in entities)
+            {
+                ChunkAspect chunk = SystemAPI.GetAspect<ChunkAspect>(entity);
+                Debug.Log("CreateMesh");
+                //chunk.DirtyFlag = false;
+                CreateMesh(chunk, ref state);
+  
             }
         }
 
@@ -52,7 +59,7 @@ namespace TerrainGenerator
 
             for (int verticeIndex = 0; verticeIndex < vertices.Length; verticeIndex++)
             {
-                vertices[verticeIndex] = chunk.verticesBuffer[verticeIndex].vertice.position;
+                vertices[verticeIndex] = chunk.verticesBuffer[verticeIndex].vertice.position - chunk.Position;
                 normals[verticeIndex] = chunk.verticesBuffer[verticeIndex].vertice.normal;
             }
 
@@ -70,7 +77,6 @@ namespace TerrainGenerator
                 FilterSettings = filterSettings,
                 LightProbeUsage = LightProbeUsage.Off,
             };
-
 
             var material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             var materialMeshInfo = MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0);

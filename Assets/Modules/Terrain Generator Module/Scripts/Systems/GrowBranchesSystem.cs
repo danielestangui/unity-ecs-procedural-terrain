@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using Unity.Burst;
+using Unity.Rendering;
 
 namespace TerrainGenerator
 {
@@ -76,6 +77,12 @@ namespace TerrainGenerator
                 ecb.RemoveComponent<OctreeLeafComponent>(index, octreeLeaf.self);
                 ecb.RemoveComponent<ChunkComponent>(index, octreeLeaf.self);
 
+                //ecb.RemoveComponent<RenderMeshDescription>(index, octreeLeaf.self);
+                ecb.RemoveComponent<RenderMeshArray>(index, octreeLeaf.self);
+                //ecb.RemoveComponent<MaterialMeshInfo>(index, octreeLeaf.self);
+                ecb.RemoveComponent<RenderBounds>(index, octreeLeaf.self);
+
+
                 Entity[] childs = new Entity[8];
 
                 int halfLenght = octreeLeaf.Lenght / 2;
@@ -86,7 +93,8 @@ namespace TerrainGenerator
                 {
                     LocalTransform transform = new LocalTransform
                     {
-                        Position = octreeLeaf.Position + Octree.childMap[childIndex] * quarterLenght
+                        Position = octreeLeaf.Position + Octree.childMap[childIndex] * quarterLenght,
+                        Scale = 1
                     };
 
                     OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
