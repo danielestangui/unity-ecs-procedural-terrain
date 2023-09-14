@@ -37,7 +37,6 @@ namespace TerrainGenerator
             foreach (var entity in entities)
             {
                 ChunkAspect chunk = SystemAPI.GetAspect<ChunkAspect>(entity);
-                Debug.Log("CreateMesh");
                 //chunk.DirtyFlag = false;
                 CreateMesh(chunk, ref state);
   

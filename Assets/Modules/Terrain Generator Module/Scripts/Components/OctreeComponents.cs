@@ -7,6 +7,7 @@ namespace TerrainGenerator
 {
     public struct OctreeNodeComponent : IComponentData
     {
+        public int childIndex;
         public int depth;
         public Entity parent;
         public int resolution;

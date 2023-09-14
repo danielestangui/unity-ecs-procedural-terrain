@@ -39,6 +39,7 @@ namespace TerrainGenerator
                 // Set Components
                 OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                 {
+                    childIndex = -1,
                     parent = Entity.Null,
                     lenght = authoring.data.octreeLenght * (1 << (authoring.data.depthResolution - 1)),
                     depth = authoring.data.depthResolution,

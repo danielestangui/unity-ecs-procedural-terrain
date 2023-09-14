@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShapesSamples", "ShapesSamp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Destrom.Player", "Destrom.Player.csproj", "{03F08946-4138-2635-A81F-3AFD58D6C12E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{EFB35C8C-E951-13A3-39B9-27AA5EA98789}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +37,6 @@ Global
 		{03F08946-4138-2635-A81F-3AFD58D6C12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03F08946-4138-2635-A81F-3AFD58D6C12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03F08946-4138-2635-A81F-3AFD58D6C12E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFB35C8C-E951-13A3-39B9-27AA5EA98789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFB35C8C-E951-13A3-39B9-27AA5EA98789}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFB35C8C-E951-13A3-39B9-27AA5EA98789}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFB35C8C-E951-13A3-39B9-27AA5EA98789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

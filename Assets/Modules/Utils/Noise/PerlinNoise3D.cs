@@ -62,7 +62,7 @@ namespace MyNoise
 
         private const int directionCount = 15;
 
-        private const float frequency = 0.04f;
+        private const float frequency = 0.2f;
 
         private static float scalar(Vector3 a, Vector3 b)
         {

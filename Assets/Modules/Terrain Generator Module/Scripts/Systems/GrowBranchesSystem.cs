@@ -99,6 +99,7 @@ namespace TerrainGenerator
 
                     OctreeNodeComponent octreeNodeComponent = new OctreeNodeComponent
                     {
+                        childIndex = childIndex,
                         parent = octreeLeaf.self,
                         depth = octreeLeaf.Depth - 1,
                         lenght = halfLenght,

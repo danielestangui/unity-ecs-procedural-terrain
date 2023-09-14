@@ -91,6 +91,7 @@
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\ChunkAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\density.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\SVD.cs" />
+    <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\OctreeUtils.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNodeType.cs" />
     <Compile Include="Assets\Modules\Utils\Draw Gizmos\Scripts\GizmoECS.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Utils\DrawMono.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Systems\DualCounturingDrawSystem.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\TerrainGeneratorAuthoring.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\DualContouring\OctreeNode.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Scripts\OctreeUtils.cs" />
     <Compile Include="Assets\Modules\Utils\Noise\PerlinNoise3D.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Models\TerrainGeneratorData.cs" />
     <Compile Include="Assets\Modules\Terrain Generator Module\Scripts\Authoring\TerrainGeneratorRenderAuthoring.cs" />
@@ -123,7 +123,6 @@
     <Compile Include="Assets\Modules\Utils\Draw Gizmos\Scripts\GizmoSystem.cs" />
     <Compile Include="Assets\Modules\Utils\Common\Scripts\UtilsInstaller.cs" />
     <Compile Include="Assets\Modules\Dual Contouring\Code\TestManager.cs" />
-    <Compile Include="Assets\Modules\Octree Module\Systems\OctreeHelperSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shapes\Shaders\Generated Shaders\Resources\Triangle Darken.shader" />
